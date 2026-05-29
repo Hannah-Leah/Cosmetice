@@ -1,8 +1,43 @@
-﻿@{
+﻿@model IEnumerable<Cosmetice.Models.Product>
+
+@Html.AntiForgeryToken()
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+
+    <!-- SEARCH BAR -->
+    <div class="search-bar shadow-sm p-3 mb-4 bg-white rounded">
+        <form asp-action="Index" method="get" class="d-flex justify-content-center">
+            <input type="text" name="SearchString"
+                   value="@ViewData["CurrentFilter"]"
+                   class="form-control w-50 me-2"
+                   placeholder="Search..." />
+
+            <button type="submit" class="btn btn-dark me-2">Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+        </form>
+    </div>
+    <!-- PRODUCTS -->
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            @await Html.PartialAsync("/Views/Shared/_ItemCardsPartial.cshtml", item)
+        }
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="d-flex justify-content-center mt-4">
+        @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+        {
+            <a asp-action="Index"
+               asp-route-pageNumber="@i"
+               asp-route-searchString="@ViewData["CurrentFilter"]"
+               class="btn mx-1 @(i == (int)ViewBag.CurrentPage ? "btn-dark" : "btn-outline-dark")">
+                @i
+            </a>
+        }
+    </div>
 </div>

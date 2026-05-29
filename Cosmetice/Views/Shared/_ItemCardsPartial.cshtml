@@ -1,0 +1,32 @@
+﻿@model Cosmetice.Models.Product
+@using Microsoft.AspNetCore.Identity
+
+<div class="col-lg-3 col-md-4 col-sm-6">
+
+    <div class="card product-card h-100 shadow-sm">
+
+        <img class="card-img-top product-image"
+             src="@(Model.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png")"
+             alt="Product Image">
+
+        <div class="card-body text-center">
+
+            <h6 class="text-muted">@Model.Brand.Name</h6>
+
+            <h5 class="fw-bold">@Model.Name</h5>
+
+        </div>
+
+        <div class="card-footer bg-white border-0 text-center">
+
+            <button class="btn btn-outline-dark btn-sm w-100 mb-2"
+                    onclick="location.href='@Url.Action("Details", "Products", new { id = Model.ProductId })'">
+                View Details
+            </button>
+
+           
+
+        </div>
+
+    </div>
+</div>
