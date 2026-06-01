@@ -52,7 +52,7 @@ namespace Cosmetice.Controllers
             return View(pagedItems);
         }
 
-        public IActionResult Privacy()
+        public IActionResult AdminPage()
         {
             return View();
         }

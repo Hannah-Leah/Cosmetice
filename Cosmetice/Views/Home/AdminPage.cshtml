@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Admin page";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Admin Page</h2>
+
+    <div class="d-flex gap-3">
+        <a asp-controller="Products"
+           asp-action="Index"
+           class="btn btn-primary btn-lg">
+            Product Management
+        </a>
+
+        <a asp-controller="Admin"
+           asp-action="Index"
+           class="btn btn-warning btn-lg">
+            User Management
+        </a>
+    </div>
+</div>

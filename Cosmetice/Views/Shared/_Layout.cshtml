@@ -23,7 +23,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+                            <!--Check if user is admin to allow permission for admin page-->
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminPage">Admin Page</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link text-dark" onclick="alert('You do not have access to the Admin Page.');">Admin Page</a>
+                            }
+
+                           
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Cosmetice.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cosmetice.Controllers
 {
+
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly CosmeticeContext _context;
