@@ -118,11 +118,14 @@
                     <img class="card-img-top" src="@(item.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png")" alt="Card image" style="width:150px; height:180px;">
                 </td>
 
+    @if (User.IsInRole("Admin"))
+    {
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
             </td>
+    }
         </tr>
 }
     </tbody>

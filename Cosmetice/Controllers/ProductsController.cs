@@ -62,11 +62,15 @@ namespace Cosmetice.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,BrandId,CategoryId,Name,Description,ReleaseDate,CountryOfOrigin,Price,SkinType,IsVegan,Shade,Ingredients,Volume,FinishType,AverageRating,ReviewCount,CreatedAt")] Product product, List<IFormFile> imageFiles)
+        public async Task<IActionResult> Create([Bind("BrandId,CategoryId,Name,Description,\r\nReleaseDate,CountryOfOrigin,Price,SkinType,\r\nIsVegan,Shade,Ingredients,Volume,FinishType")] Product product, List<IFormFile> imageFiles)
         {
+
+
             if (ModelState.IsValid)
             {
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
               
@@ -97,11 +101,16 @@ namespace Cosmetice.Controllers
                         }
                     }
 
+                    product.CreatedAt = DateTime.UtcNow;
+                    product.AverageRating = 0;
+                    product.ReviewCount = 0;
+
                     await _context.SaveChangesAsync();
                 }
 
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name", product.BrandId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
             return View(product);
@@ -131,6 +140,7 @@ namespace Cosmetice.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,BrandId,CategoryId,Name,Description,ReleaseDate,CountryOfOrigin,Price,SkinType,IsVegan,Shade,Ingredients,Volume,FinishType,AverageRating,ReviewCount,CreatedAt")] Product product, List<IFormFile> imageFiles)
         {
@@ -241,6 +251,7 @@ namespace Cosmetice.Controllers
 
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -253,7 +264,25 @@ namespace Cosmetice.Controllers
                 // Remove images
                 _context.ProductImages.RemoveRange(product.ProductImages);
                 _context.Products.Remove(product);
+
+                // remove images from folder
+
+                foreach (var image in product.ProductImages)
+                {
+                    var fullPath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        image.ImageUrl.TrimStart('/')
+                    );
+
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                }
             }
+
+
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
