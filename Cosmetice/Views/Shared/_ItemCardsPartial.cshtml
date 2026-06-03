@@ -1,32 +1,48 @@
 ﻿@model Cosmetice.Models.Product
-@using Microsoft.AspNetCore.Identity
 
 <div class="col-lg-3 col-md-4 col-sm-6">
 
-    <div class="card product-card h-100 shadow-sm">
+    <div class="card beauty-card h-100">
 
-        <img class="card-img-top product-image"
+        <img class="card-img-top beauty-image"
              src="@(Model.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png")"
              alt="Product Image">
 
         <div class="card-body text-center">
 
-            <h6 class="text-muted">@Model.Brand.Name</h6>
+            <span class="brand-name">
+                @Model.Brand.Name
+            </span>
 
-            <h5 class="fw-bold">@Model.Name</h5>
+            <h5 class="product-name">
+                @Model.Name
+            </h5>
+
+            <div class="rating-preview">
+                                            
+               @*  ⭐ @(Model.AverageRating.ToString("0.0")) *@
+
+                ⭐ @(string.Format("{0:0.0}", Model.AverageRating))
+
+                <small>
+                    (@Model.ReviewCount reviews)
+                </small>
+
+            </div>
 
         </div>
 
-        <div class="card-footer bg-white border-0 text-center">
+        <div class="card-footer bg-transparent border-0">
 
-            <button class="btn btn-outline-dark btn-sm w-100 mb-2"
-                    onclick="location.href='@Url.Action("Details", "Products", new { id = Model.ProductId })'">
-                View Details
-            </button>
-
-           
+            <a asp-controller="Products"
+               asp-action="Details"
+               asp-route-id="@Model.ProductId"
+               class="btn beauty-btn w-100">
+                View Product
+            </a>
 
         </div>
 
     </div>
+
 </div>

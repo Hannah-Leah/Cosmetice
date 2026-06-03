@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Cosmetice.Controllers
 {
 
-    [Authorize(Roles = "Admin")]
+   
     public class ProductsController : Controller
     {
         private readonly CosmeticeContext _context;
@@ -49,6 +49,7 @@ namespace Cosmetice.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -105,6 +106,8 @@ namespace Cosmetice.Controllers
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
             return View(product);
         }
+
+        [Authorize(Roles = "Admin")]
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -214,6 +217,7 @@ namespace Cosmetice.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin")]
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
