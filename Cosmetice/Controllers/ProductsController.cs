@@ -37,10 +37,12 @@ namespace Cosmetice.Controllers
             }
 
             var product = await _context.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .Include(p => p.ProductImages)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+     .Include(p => p.Brand)
+     .Include(p => p.Category)
+     .Include(p => p.ProductImages)
+     .Include(p => p.Reviews)
+         .ThenInclude(r => r.ReviewImages)
+     .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
                 return NotFound();

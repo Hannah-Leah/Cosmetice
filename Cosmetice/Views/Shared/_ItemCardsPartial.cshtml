@@ -1,6 +1,66 @@
 ﻿@model Cosmetice.Models.Product
 
-<div class="col-lg-3 col-md-4 col-sm-6">
+<div class="col-xl-3 col-lg-4 col-md-6">
+
+    <div class="beauty-product-card">
+
+        <img class="beauty-product-image"
+             src="@(Model.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png")"
+             alt="@Model.Name">
+
+        <div class="beauty-card-body">
+
+            <div class="beauty-brand">
+                @Model.Brand.Name
+            </div>
+
+            <h5 class="beauty-product-name">
+                @Model.Name
+            </h5>
+
+            <div class="beauty-meta">
+
+                <span class="badge beauty-category">
+                    @Model.Category.Name
+                </span>
+
+                @if (Model.IsVegan)
+                {
+                    <span class="badge bg-success">
+                        Vegan 🌱
+                    </span>
+                }
+
+            </div>
+
+            <div class="beauty-price">
+                €@Model.Price
+            </div>
+
+            <div class="beauty-rating">
+
+                ⭐ @(Model.AverageRating ?? 0)
+
+                <small>
+                    (@(Model.ReviewCount ?? 0) reviews)
+                </small>
+
+            </div>
+
+            <a asp-controller="Products"
+               asp-action="Details"
+               asp-route-id="@Model.ProductId"
+               class="btn beauty-btn w-100 mt-3">
+                View Product
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+@* <div class="col-lg-3 col-md-4 col-sm-6">
 
     <div class="card beauty-card h-100">
 
@@ -18,11 +78,11 @@
                 @Model.Name
             </h5>
 
-            <div class="rating-preview">
+            <div class="rating-preview"> *@
                                             
                @*  ⭐ @(Model.AverageRating.ToString("0.0")) *@
 
-                ⭐ @(string.Format("{0:0.0}", Model.AverageRating))
+                @* ⭐ @(string.Format("{0:0.0}", Model.AverageRating))
 
                 <small>
                     (@Model.ReviewCount reviews)
@@ -45,4 +105,4 @@
 
     </div>
 
-</div>
+</div> *@

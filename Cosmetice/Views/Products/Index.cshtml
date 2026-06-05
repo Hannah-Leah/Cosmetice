@@ -1,14 +1,134 @@
 ﻿@model IEnumerable<Cosmetice.Models.Product>
 
 @{
+    ViewData["Title"] = "Products";
+}
+
+<div class="products-header">
+
+    
+    <div>
+        <h1 class="beauty-title">.✦ ݁˖ Beauty Collection</h1>
+        <p class="beauty-subtitle">
+            Discover your new favorite skincare and makeup!
+        </p>
+    </div>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn beauty-btn">
+            + Add Product
+        </a>
+    }
+   
+
+</div>
+
+<div class="row g-4">
+
+    
+    @foreach (var item in Model)
+    {
+        <div class="col-xl-3 col-lg-4 col-md-6">
+
+            <div class="beauty-product-card">
+
+                <img class="beauty-product-image"
+                     src="@(item.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png")"
+                     alt="@item.Name">
+
+                <div class="beauty-card-body">
+
+                    <div class="beauty-brand">
+                        @item.Brand.Name
+                    </div>
+
+                    <h5 class="beauty-product-name">
+                        @item.Name
+                    </h5>
+
+                    <div class="beauty-meta">
+
+                        <span class="badge beauty-category">
+                            @item.Category.Name
+                        </span>
+
+                        @if (item.IsVegan)
+                        {
+                            <span class="badge bg-success">
+                                Vegan 🌱
+                            </span>
+                        }
+
+                    </div>
+
+                    <div class="beauty-price">
+                        €@item.Price
+                    </div>
+
+                    <div class="beauty-rating">
+
+                        ⭐ @(item.AverageRating ?? 0)
+
+                        <small>
+                            (@(item.ReviewCount ?? 0) reviews)
+                        </small>
+
+                    </div>
+
+                    <a asp-action="Details"
+                       asp-route-id="@item.ProductId"
+                       class="btn beauty-btn w-100 mt-3">
+                        View Product
+                    </a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="admin-buttons">
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.ProductId"
+                               class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.ProductId"
+                               class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+   
+
+</div>
+
+
+
+
+@* @model IEnumerable<Cosmetice.Models.Product>
+
+@{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Products</h1>
 
+ @if (User.IsInRole("Admin"))
+    {
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+    }
+
 <table class="table">
     <thead>
         <tr>
@@ -130,3 +250,4 @@
 }
     </tbody>
 </table>
+ *@

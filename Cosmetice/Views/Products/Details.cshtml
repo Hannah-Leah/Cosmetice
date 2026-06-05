@@ -39,7 +39,7 @@
                                 type="button"
                                 data-bs-target="#productCarousel"
                                 data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
+                            <span class="carousel-control-next-icon" style="color:deeppink"></span>
                         </button>
                     </div>
                 }
@@ -52,39 +52,189 @@
 
             <!-- Product Info -->
             <div class="col-md-7">
-                <h2 class="fw-bold" style="color:lightpink;">@Model.Name</h2>
-                <h5 class="text-muted">@Model.Brand?.Name</h5>
 
-                <p class="mt-3">@Model.Description</p>
+                
+                <span class="beauty-brand">
+                    ✨ @Model.Brand?.Name
+                </span>
 
-                <hr />
+                <h1 class="beauty-product-title">
+                    @Model.Name
+                </h1>
 
-                <p>
-                    <strong>Category:</strong>
-                    <span class="badge bg-info">@Model.Category?.Name</span>
+                <div class="rating-summary">
+
+                    <span class="rating-stars">
+                        ⭐ @Model.AverageRating
+                    </span>
+
+                    <span class="review-count">
+                        (@Model.ReviewCount Reviews)
+                    </span>
+
+                </div>
+
+                <p class="beauty-description mt-4">
+                    @Model.Description
                 </p>
 
-                <p>
-                    <strong>is vegan:</strong>
-                    @Model.IsVegan
-                </p>
+                <div class="product-badges">
 
-@*                 <p class="fs-3 fw-bold" style="color:hotpink">
-                    @Model.Price.ToString("C")
-                </p> *@
+                    <span class="badge bg-pink">
+                        @Model.Category?.Name
+                    </span>
+
+                    @if (Model.IsVegan)
+                    {
+                        <span class="badge bg-success">
+                            🌱 Vegan
+                        </span>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.SkinType))
+                    {
+                        <span class="badge bg-secondary">
+                            @Model.SkinType
+                        </span>
+                    }
+
+                </div>
+
+                <div class="product-info-grid mt-4">
+
+                    <div class="info-card">
+                        <h6>Country</h6>
+                        <p>@Model.CountryOfOrigin</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h6>Release Date</h6>
+                        <p>@Model.ReleaseDate</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h6>Volume</h6>
+                        <p>@Model.Volume</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h6>Finish</h6>
+                        <p>@Model.FinishType</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h6>Shade</h6>
+                        <p>@Model.Shade</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h6>Price</h6>
+                        <p>€@Model.Price</p>
+                    </div>
+
+                </div>
+
+                <div class="ingredients-section mt-5">
+
+                    
+                    <h3> Ingredients</h3>
+
+                    <div class="ingredients-box">
+
+                        @Model.Ingredients
+
+                    </div>
+                    
+
+                </div>
+
+                <div class="reviews-section mt-5">
+
+                    
+                    <h3 class="mb-4">
+                        💕 Community Reviews
+                    </h3>
+
+                    @if (Model.Reviews.Any())
+                    {
+                        @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedAt))
+                        {
+                            <div class="review-card">
+
+                                <div class="review-header">
+
+                                    <h5>@review.Title</h5>
+
+                                    <span class="review-rating">
+                                        ⭐ @review.Rating / 5
+                                    </span>
+
+                                </div>
+
+                                <small class="text-muted">
+                                    @review.CreatedAt
+                                </small>
+
+                                <p class="mt-3">
+                                    @review.Content
+                                </p>
+
+                                @if (!string.IsNullOrEmpty(review.Pros))
+                                {
+                                    <div class="review-pros">
+                                        <strong>💕 Pros</strong>
+                                        <p>@review.Pros</p>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(review.Cons))
+                                {
+                                    <div class="review-cons">
+                                        <strong>💔 Cons</strong>
+                                        <p>@review.Cons</p>
+                                    </div>
+                                }
+
+                                @if (review.ReviewImages.Any())
+                                {
+                                    <div class="review-images">
+
+                                        @foreach (var image in review.ReviewImages)
+                                        {
+                                            <img src="@image.ImageUrl"
+                                                 class="review-image" />
+                                        }
+
+                                    </div>
+                                }
+
+                                <div class="review-footer">
+
+                                    👍 @review.LikesCount
+
+                                    &nbsp;&nbsp;
+
+                                    👎 @review.DislikesCount
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-reviews">
+                           Be the first to review this product 💖
+                        </div>
+                    }
+                    
+
+                </div>
+
 
                 
 
-                <!-- Buttons -->
-                <div class="mt-4 d-flex gap-2">
-
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-lg" style="background-color:lightgray;">
-                        Back to Shop
-                    </a>
-
-                 
-                </div>
             </div>
-        </div>
+
     </div>
 </div>

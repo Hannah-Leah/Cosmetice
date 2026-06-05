@@ -145,3 +145,177 @@ body {
     background: #d63384;
     border: none;
 }
+
+/* ------------- Products list -------------------- */
+.products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.beauty-title {
+    color: #d63384;
+    font-weight: 700;
+}
+
+.beauty-subtitle {
+    color: #777;
+}
+
+.beauty-product-card {
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    transition: .3s;
+    height: 100%;
+}
+
+    .beauty-product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(214,51,132,.18);
+    }
+
+.beauty-product-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.beauty-card-body {
+    padding: 20px;
+}
+
+.beauty-brand {
+    color: #d63384;
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+.beauty-product-name {
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.beauty-category {
+    background: #ffe3ef;
+    color: #d63384;
+}
+
+.beauty-meta {
+    margin: 10px 0;
+}
+
+.beauty-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    margin-top: 10px;
+}
+
+.beauty-rating {
+    margin-top: 10px;
+    color: #555;
+}
+
+.admin-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+.bg-pink {
+    background-color: #ff69b4;
+}
+
+.beauty-product-title {
+    color: #d63384;
+    font-weight: 700;
+}
+
+.beauty-brand {
+    color: #ff69b4;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.rating-summary {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.product-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 15px;
+}
+
+.info-card {
+    background: #fff4f8;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.ingredients-box {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.review-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.review-rating {
+    color: #ff69b4;
+    font-weight: bold;
+}
+
+.review-pros {
+    background: #e8fff1;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.review-cons {
+    background: #fff0f0;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.review-images {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.review-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.review-footer {
+    margin-top: 15px;
+    color: #666;
+}
+
+.empty-reviews {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+}
