@@ -43,11 +43,14 @@ namespace Cosmetice.Controllers
     .Include(p => p.Category)
     .Include(p => p.ProductImages)
     .Include(p => p.Reviews)
+   .ThenInclude(r => r.ReviewImages)
     .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
                 return NotFound();
             }
+
+
 
             return View(product);
         }
@@ -291,71 +294,7 @@ namespace Cosmetice.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddReview(CreateReviewViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction(nameof(Details), new { id = model.ProductId });
-            }
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var existingReview = await _context.Reviews
-                .FirstOrDefaultAsync(r =>
-                    r.ProductId == model.ProductId &&
-                    r.UserId == userId);
-
-            if (existingReview != null)
-            {
-                TempData["Error"] = "You have already reviewed this product.";
-
-                return RedirectToAction(nameof(Details), new { id = model.ProductId });
-            }
-
-            var review = new Review
-            {
-                ProductId = model.ProductId,
-                UserId = userId,
-                Title = model.Title,
-                Content = model.Content,
-                Rating = model.Rating,
-                Pros = model.Pros,
-                Cons = model.Cons,
-                SkinType = model.SkinType,
-                LikesCount = 0,
-                DislikesCount = 0,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Reviews.Add(review);
-
-            await _context.SaveChangesAsync();
-
-            await UpdateProductStatistics(model.ProductId);
-
-            return RedirectToAction(nameof(Details), new { id = model.ProductId });
-        }
-
-        private async Task UpdateProductStatistics(int productId)
-        {
-            var product = await _context.Products
-                .Include(p => p.Reviews)
-                .FirstOrDefaultAsync(p => p.ProductId == productId);
-
-            if (product == null)
-                return;
-
-            product.ReviewCount = product.Reviews.Count;
-
-            product.AverageRating = product.Reviews.Any()
-                ? (decimal)product.Reviews.Average(r => r.Rating)
-                : 0;
-
-            await _context.SaveChangesAsync();
-        }
+        
 
         private bool ProductExists(int id)
         {

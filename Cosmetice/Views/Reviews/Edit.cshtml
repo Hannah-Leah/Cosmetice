@@ -1,0 +1,77 @@
+﻿@model Cosmetice.ViewModels.EditReviewViewModel
+
+@{
+    ViewData["Title"] = "Edit Review";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow border-0 rounded-4 p-4">
+
+        <h2 class="mb-4">💖 Edit Review</h2>
+
+        <form asp-action="Edit" method="post">
+
+            <input asp-for="ReviewId" type="hidden" />
+            <input asp-for="ProductId" type="hidden" />
+
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input asp-for="Title" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Rating</label>
+
+                <select asp-for="Rating" class="form-select">
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="1">⭐</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Skin Type</label>
+                <input asp-for="SkinType" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Pros</label>
+                <textarea asp-for="Pros"
+                          class="form-control"
+                          rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cons</label>
+                <textarea asp-for="Cons"
+                          class="form-control"
+                          rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Review</label>
+                <textarea asp-for="Content"
+                          class="form-control"
+                          rows="6"></textarea>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Save Changes 💕
+            </button>
+
+            <a asp-controller="Products"
+               asp-action="Details"
+               asp-route-id="@Model.ProductId"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
