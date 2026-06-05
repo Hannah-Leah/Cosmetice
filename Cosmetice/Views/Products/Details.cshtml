@@ -148,6 +148,80 @@
 
                 </div>
 
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="review-form-card mt-5">
+
+                        <h3>💖 Write a Review</h3>
+
+                        <form asp-action="AddReview" method="post">
+
+                            <input type="hidden"
+                                   name="ProductId"
+                                   value="@Model.ProductId" />
+
+                            <div class="mb-3">
+                                <label>Title</label>
+                                <input name="Title"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Rating</label>
+
+                                <select name="Rating" class="form-select">
+
+                                    <option value="5">⭐⭐⭐⭐⭐</option>
+                                    <option value="4">⭐⭐⭐⭐</option>
+                                    <option value="3">⭐⭐⭐</option>
+                                    <option value="2">⭐⭐</option>
+                                    <option value="1">⭐</option>
+
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Skin Type</label>
+                                <input name="SkinType"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Pros</label>
+                                <textarea name="Pros"
+                                      class="form-control"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Cons</label>
+                                <textarea name="Cons"
+                                      class="form-control"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Review</label>
+                                <textarea name="Content"
+                                      rows="5"
+                                      class="form-control"></textarea>
+                            </div>
+
+                            <button class="btn beauty-btn">
+                                Submit Review 
+                            </button>
+
+                        </form>
+
+                       
+
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info mt-5">
+                        Please log in to write a review.
+                    </div>
+                }
+
                 <div class="reviews-section mt-5">
 
                     
