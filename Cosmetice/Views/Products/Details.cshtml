@@ -306,13 +306,67 @@
                                     </div>
                                 }
 
-                                <div class="review-footer">
+                               <!-- REVIEW VOTES-->
 
-                                    👍 @review.LikesCount
+                                <div class="review-footer mt-3">
 
-                                    &nbsp;&nbsp;
+                                    @if (User.Identity.IsAuthenticated &&
+                                                                currentUserId != review.UserId)
+                                    {
+                                        <form asp-controller="Reviews"
+                                              asp-action="Vote"
+                                              method="post"
+                                              class="d-inline">
 
-                                    👎 @review.DislikesCount
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden"
+                                                   name="reviewId"
+                                                   value="@review.ReviewId" />
+
+                                            <input type="hidden"
+                                                   name="isLike"
+                                                   value="true" />
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-success">
+                                                👍 @(review.LikesCount ?? 0)
+                                            </button>
+
+                                        </form>
+
+                                        <form asp-controller="Reviews"
+                                              asp-action="Vote"
+                                              method="post"
+                                              class="d-inline">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden"
+                                                   name="reviewId"
+                                                   value="@review.ReviewId" />
+
+                                            <input type="hidden"
+                                                   name="isLike"
+                                                   value="false" />
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                👎 @(review.DislikesCount ?? 0)
+                                            </button>
+
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            👍 @(review.LikesCount ?? 0)
+                                        </span>
+
+                                        <span class="ms-3">
+                                            👎 @(review.DislikesCount ?? 0)
+                                        </span>
+                                    }
 
                                 </div>
 

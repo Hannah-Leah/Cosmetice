@@ -259,5 +259,94 @@ namespace Cosmetice.Controllers
                 "Products",
                 new { id = productId });
         }
+
+        // POST: Reviews/Vote
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Vote(int reviewId, bool isLike)
+        {
+            var userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            var review = await _context.Reviews
+                .Include(r => r.ReviewVotes)
+                .FirstOrDefaultAsync(r =>
+                    r.ReviewId == reviewId);
+
+            if (review == null)
+                return NotFound();
+
+            // Prevent voting on your own review
+            if (review.UserId == userId)
+            {
+                TempData["Error"] =
+                    "You cannot vote on your own review.";
+
+                return RedirectToAction(
+                    "Details",
+                    "Products",
+                    new { id = review.ProductId });
+            }
+
+            var existingVote = await _context.ReviewVotes
+                .FirstOrDefaultAsync(v =>
+                    v.ReviewId == reviewId &&
+                    v.UserId == userId);
+
+            if (existingVote == null)
+            {
+                // First vote
+
+                _context.ReviewVotes.Add(new ReviewVote
+                {
+                    ReviewId = reviewId,
+                    UserId = userId,
+                    IsLike = isLike,
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                if (isLike)
+                    review.LikesCount++;
+                else
+                    review.DislikesCount++;
+            }
+            else if (existingVote.IsLike != isLike)
+            {
+                // User switched vote
+
+                if (isLike)
+                {
+                    review.LikesCount++;
+                    review.DislikesCount--;
+                }
+                else
+                {
+                    review.LikesCount--;
+                    review.DislikesCount++;
+                }
+
+                existingVote.IsLike = isLike;
+            }
+            else
+            {
+                // Clicking same vote removes it
+
+                if (isLike)
+                    review.LikesCount--;
+                else
+                    review.DislikesCount--;
+
+                _context.ReviewVotes.Remove(existingVote);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(
+                "Details",
+                "Products",
+                new { id = review.ProductId });
+        }
     }
 }
