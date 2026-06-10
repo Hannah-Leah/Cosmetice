@@ -1,0 +1,77 @@
+﻿@model Cosmetice.Models.ReviewReply
+
+<div class="card mt-2 ms-3">
+
+    <div class="card-body p-2">
+
+        <small class="text-muted">
+            @Model.CreatedAt
+        </small>
+
+        <p class="mb-1">
+            @Model.Content
+        </p>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <button class="btn btn-link btn-sm"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#replyForm-@Model.ReplyId">
+                Reply
+            </button>
+
+            <div class="collapse"
+                 id="replyForm-@Model.ReplyId">
+
+                <form asp-controller="Reviews"
+                      asp-action="AddReply"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="reviewId"
+                           value="@Model.ReviewId" />
+
+                    <input type="hidden"
+                           name="parentReplyId"
+                           value="@Model.ReplyId" />
+
+                    <input type="hidden"
+                           name="productId"
+                           value="@Model.Review.ProductId" />
+
+                    <textarea name="content"
+                          class="form-control"
+                          rows="2">
+                    </textarea>
+
+                    <button type="submit"
+                            class="btn btn-sm btn-primary mt-2">
+                        Reply
+                    </button>
+
+                </form>
+
+            </div>
+        }
+
+        @if (Model.InverseParentReply.Any())
+        {
+            <div class="ms-4">
+
+                @foreach (var childReply in Model.InverseParentReply
+                            .OrderBy(r => r.CreatedAt))
+                {
+                    @await Html.PartialAsync(
+                    "_ReplyPartial",
+                        childReply)
+                        }
+
+            </div>
+        }
+
+    </div>
+
+</div>

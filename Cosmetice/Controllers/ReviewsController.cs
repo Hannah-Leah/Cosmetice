@@ -348,5 +348,46 @@ namespace Cosmetice.Controllers
                 "Products",
                 new { id = review.ProductId });
         }
+
+        // POST: Reviews/AddReply
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReply(
+            int reviewId,
+            int productId,
+            string content,
+            int? parentReplyId)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return RedirectToAction(
+                    "Details",
+                    "Products",
+                    new { id = productId });
+            }
+
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var reply = new ReviewReply
+            {
+                ReviewId = reviewId,
+                UserId = userId,
+                ParentReplyId = parentReplyId,
+                Content = content,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ReviewReplies.Add(reply);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(
+                "Details",
+                "Products",
+                new { id = productId });
+        }
     }
 }

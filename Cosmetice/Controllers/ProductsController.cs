@@ -44,9 +44,12 @@ namespace Cosmetice.Controllers
     .Include(p => p.ProductImages)
     .Include(p => p.Reviews)
     .ThenInclude(r => r.ReviewVotes)
-
+    .Include(p => p.Reviews)
+    .ThenInclude(r => r.ReviewReplies)
+       .ThenInclude(rr => rr.InverseParentReply)
 .Include(p => p.Reviews)
     .ThenInclude(r => r.ReviewImages)
+
     .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
