@@ -26,4 +26,6 @@ public partial class ReviewReply
     public virtual ReviewReply ParentReply { get; set; }
 
     public virtual Review Review { get; set; }
+
+
 }

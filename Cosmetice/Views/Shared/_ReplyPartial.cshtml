@@ -1,4 +1,13 @@
-﻿@model Cosmetice.Models.ReviewReply
+﻿@* @model Cosmetice.Models.ReviewReply
+
+@using System.Security.Claims
+
+@{
+    var currentUserId =
+        User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<div class="reply-card border-start ps-3 mb-3">
 
 <div class="card mt-2 ms-3">
 
@@ -73,5 +82,141 @@
         }
 
     </div>
+
+</div> *@
+
+
+@model Cosmetice.ViewModels.ReplyViewModel
+
+@using System.Security.Claims
+
+@{
+    var reply = Model.Reply;
+
+    var replyUser =
+        Model.Users.ContainsKey(reply.UserId)
+        ? Model.Users[reply.UserId]
+        : null;
+}
+
+<div class="reply-thread">
+
+    <div class="reply-item">
+
+        <!-- User -->
+
+        <div class="d-flex align-items-start">
+
+            <img src="@(replyUser?.ProfilePictureUrl ?? "/images/default-user.png")"
+                 class="reply-avatar"
+                 alt="user" />
+
+            <div class="reply-content">
+
+                <div class="reply-header">
+
+                    <span class="reply-name">
+                        @(replyUser?.DisplayName ??
+                                                replyUser?.UserName ??
+                                                "Deleted User")
+                    </span>
+
+                    <span class="reply-meta">
+
+                        @if (!string.IsNullOrEmpty(replyUser?.Country))
+                        {
+                            @replyUser.Country
+                            <span>•</span>
+                        }
+
+                        @if (!string.IsNullOrEmpty(replyUser?.SkinType))
+                        {
+                            @replyUser.SkinType
+                            <span>•</span>
+                        }
+
+                        @reply.CreatedAt?.ToString("dd MMM yyyy")
+
+                    </span>
+
+                </div>
+
+                <div class="reply-text">
+                    @reply.Content
+                </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button class="reply-action"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#replyForm-@reply.ReplyId">
+
+                        Reply
+
+                    </button>
+
+                    <div class="collapse mt-2"
+                         id="replyForm-@reply.ReplyId">
+
+                        <form asp-controller="Reviews"
+                              asp-action="AddReply"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="reviewId"
+                                   value="@reply.ReviewId" />
+
+                            <input type="hidden"
+                                   name="parentReplyId"
+                                   value="@reply.ReplyId" />
+
+                            <input type="hidden"
+                                   name="productId"
+                                   value="@reply.Review.ProductId" />
+
+                            <textarea name="content"
+                                  class="form-control"
+                                  rows="2"
+                                  placeholder="Write a reply...">
+                            </textarea>
+
+                            <button class="btn btn-sm beauty-btn mt-2">
+
+                                Reply
+
+                            </button>
+
+                        </form>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    @if (reply.InverseParentReply.Any())
+    {
+        <div class="reply-children">
+
+            @foreach (var child in reply.InverseParentReply
+                    .OrderBy(r => r.CreatedAt))
+            {
+                @await Html.PartialAsync(
+                "_ReplyPartial",
+                new Cosmetice.ViewModels.ReplyViewModel
+                {
+                    Reply = child,
+                    Users = Model.Users
+                })
+                }
+
+        </div>
+    }
 
 </div>

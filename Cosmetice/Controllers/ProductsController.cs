@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Cosmetice.Data;
 
 namespace Cosmetice.Controllers
 {
@@ -16,11 +17,22 @@ namespace Cosmetice.Controllers
    
     public class ProductsController : Controller
     {
+        //private readonly CosmeticeContext _context;
+
+        //public ProductsController(CosmeticeContext context)
+        //{
+        //    _context = context;
+        //}
+
+        private readonly ApplicationDbContext _identityContext;
         private readonly CosmeticeContext _context;
 
-        public ProductsController(CosmeticeContext context)
+        public ProductsController(
+            CosmeticeContext context,
+            ApplicationDbContext identityContext)
         {
             _context = context;
+            _identityContext = identityContext;
         }
 
         // GET: Products
@@ -38,27 +50,57 @@ namespace Cosmetice.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-    .Include(p => p.Brand)
-    .Include(p => p.Category)
-    .Include(p => p.ProductImages)
-    .Include(p => p.Reviews)
-    .ThenInclude(r => r.ReviewVotes)
-    .Include(p => p.Reviews)
-    .ThenInclude(r => r.ReviewReplies)
-       .ThenInclude(rr => rr.InverseParentReply)
-.Include(p => p.Reviews)
-    .ThenInclude(r => r.ReviewImages)
+            //            var product = await _context.Products
+            //    .Include(p => p.Brand)
+            //    .Include(p => p.Category)
+            //    .Include(p => p.ProductImages)
+            //    .Include(p => p.Reviews)
+            //    .ThenInclude(r => r.ReviewVotes)
+            //    .Include(p => p.Reviews)
+            //    .ThenInclude(r => r.ReviewReplies)
+            //       .ThenInclude(rr => rr.InverseParentReply)
+            //.Include(p => p.Reviews)
+            //    .ThenInclude(r => r.ReviewImages)
 
-    .FirstOrDefaultAsync(m => m.ProductId == id);
+            //    .FirstOrDefaultAsync(m => m.ProductId == id);
+            var product = await _context.Products
+.Include(p => p.Brand)
+.Include(p => p.Category)
+.Include(p => p.ProductImages)
+.Include(p => p.Reviews)
+.ThenInclude(r => r.ReviewVotes)
+.Include(p => p.Reviews)
+.ThenInclude(r => r.ReviewReplies)
+.Include(p => p.Reviews)
+.ThenInclude(r => r.ReviewImages)
+.FirstOrDefaultAsync(p => p.ProductId == id);
+
             if (product == null)
             {
                 return NotFound();
             }
 
+            var userIds =
+                product.Reviews
+                    .Select(r => r.UserId)
+                    .Concat(
+                        product.Reviews
+                            .SelectMany(r =>
+                                r.ReviewReplies
+                                    .Select(rr => rr.UserId)))
+                    .Distinct()
+                    .ToList();
 
+            var users =
+                await _identityContext.Users
+                    .Where(u => userIds.Contains(u.Id))
+                    .ToDictionaryAsync(u => u.Id);
 
-            return View(product);
+            return View(new ProductDetailsViewModel
+            {
+                Product = product,
+                Users = users
+            });
         }
 
         [Authorize(Roles = "Admin")]

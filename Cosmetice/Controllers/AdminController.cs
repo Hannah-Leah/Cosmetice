@@ -11,10 +11,10 @@ namespace Cosmetice.Controllers
     public class AdminController : Controller
     {
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly CosmeticeContext _context;
 
-        public AdminController(UserManager<IdentityUser> userManager, CosmeticeContext context)
+        public AdminController(UserManager<ApplicationUser> userManager, CosmeticeContext context)
         {
             _userManager = userManager;
             _context = context;

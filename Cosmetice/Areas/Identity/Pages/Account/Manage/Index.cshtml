@@ -9,11 +9,54 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="text-center mb-4">
+
+                @if (!string.IsNullOrEmpty(Model.Input.ProfilePictureUrl))
+                {
+                    <img src="@Model.Input.ProfilePictureUrl"
+                         class="rounded-circle shadow"
+                         width="150"
+                         height="150"
+                         style="object-fit:cover;" />
+                }
+                else
+                {
+                    <img src="/images/default-avatar.png"
+                         class="rounded-circle shadow"
+                         width="150"
+                         height="150"
+                         style="object-fit:cover;" />
+                }
+
+            </div>
             <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Input.DisplayName"
+                       class="form-control" />
+                <label asp-for="Input.DisplayName"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.SkinType"
+                       class="form-control" />
+                <label asp-for="Input.SkinType"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Country"
+                       class="form-control" />
+                <label asp-for="Input.Country"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Age"
+                       class="form-control" />
+                <label asp-for="Input.Age"></label>
+            </div>
+            <div class="mb-3">
+                <label>Change Profile Picture</label>
+
+                <input asp-for="Input.NewProfilePicture"
+                       type="file"
+                       class="form-control" />
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>

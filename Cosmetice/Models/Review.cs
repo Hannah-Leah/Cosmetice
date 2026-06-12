@@ -40,4 +40,6 @@ public partial class Review
     public virtual ICollection<ReviewReply> ReviewReplies { get; set; } = new List<ReviewReply>();
 
     public virtual ICollection<ReviewVote> ReviewVotes { get; set; } = new List<ReviewVote>();
+
+    
 }
