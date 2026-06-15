@@ -1,7 +1,9 @@
+using Cosmetice.Data;
 using Cosmetice.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Cosmetice.Controllers
 {
@@ -9,11 +11,13 @@ namespace Cosmetice.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly CosmeticeContext _context;
+        private readonly ApplicationDbContext _identityContext;
 
-        public HomeController(ILogger<HomeController> logger, CosmeticeContext context)
+        public HomeController(ILogger<HomeController> logger, CosmeticeContext context, ApplicationDbContext identityContext)
         {
             _logger = logger;
             _context = context;
+            _identityContext = identityContext;
         }
 
         public async Task<IActionResult> Index(string searchString, int? pageNumber)
@@ -48,6 +52,22 @@ namespace Cosmetice.Controllers
             int totalItems = await items.CountAsync();
             ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             ViewBag.CurrentPage = pageIndex;
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userId =
+                    User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                ViewBag.FavoriteIds = await _context.Favorites
+                    .Where(f => f.UserId == userId)
+                    .Select(f => f.ProductId)
+                    .ToListAsync();
+            }
+            else
+            {
+                ViewBag.FavoriteIds = new List<int>
+                ();
+            }
 
             return View(pagedItems);
         }

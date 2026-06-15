@@ -39,6 +39,16 @@ namespace Cosmetice.Controllers
         public async Task<IActionResult> Index()
         {
             var cosmeticeContext = _context.Products.Include(p => p.Brand).Include(p => p.Category).Include(p => p.ProductImages);
+
+            ViewBag.FavoriteIds = new List<int>();
+            var userId =
+    User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewBag.FavoriteIds = await _context.Favorites
+                .Where(f => f.UserId == userId)
+                .Select(f => f.ProductId)
+                .ToListAsync();
+
             return View(await cosmeticeContext.ToListAsync());
         }
 

@@ -76,6 +76,17 @@
                             </a>
                         </li>
 
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Favorites"
+                                   asp-action="Index">
+                                    ♡ Favorites
+                                </a>
+                            </li>
+                        }
+
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">

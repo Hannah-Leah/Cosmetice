@@ -1,8 +1,43 @@
 ﻿@model Cosmetice.Models.Product
 
+@{
+    var favoriteIds =
+        ViewBag.FavoriteIds as List<int>
+        ?? new List<int>();
+
+    bool isFavorite =
+        favoriteIds.Contains(Model.ProductId);
+}
+
 <div class="col-xl-3 col-lg-4 col-md-6">
 
     <div class="beauty-product-card">
+
+        <div class="favorite-btn-container">
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form asp-controller="Favorites"
+                      asp-action="Toggle"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="productId"
+                           value="@Model.ProductId" />
+
+                    <button type="submit"
+                            class="favorite-btn">
+
+                        @(isFavorite ? "❤️" : "♡")
+
+                    </button>
+
+                </form>
+            }
+
+        </div>
 
         <img class="beauty-product-image"
              src="@(Model.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png")"

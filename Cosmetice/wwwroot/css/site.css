@@ -164,6 +164,7 @@ body {
 }
 
 .beauty-product-card {
+    position: relative;
     background: white;
     border-radius: 25px;
     overflow: hidden;
@@ -407,6 +408,33 @@ body {
     padding-left: 18px;
     border-left: 2px solid #f7dce8;
 }
+/* FAVORITES */
+
+.favorite-btn-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.favorite-btn {
+    border: none;
+    background: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    transition: .2s;
+    color: hotpink;
+}
+
+    .favorite-btn:hover {
+        transform: scale(1.1);
+        color: hotpink;
+    }
+
+
 
 /* mobile */
 
