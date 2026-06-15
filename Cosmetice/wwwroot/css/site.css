@@ -183,6 +183,8 @@ body {
     object-fit: cover;
 }
 
+/* PRODUCT DETAILS */
+
 .beauty-card-body {
     padding: 20px;
 }
@@ -262,6 +264,8 @@ body {
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
+
+/* REVIEWS */
 
 .review-card {
     background: white;
