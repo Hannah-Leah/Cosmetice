@@ -415,59 +415,31 @@
                                     @if (User.Identity.IsAuthenticated &&
                                                                 currentUserId != review.UserId)
                                     {
-                                        <form asp-controller="Reviews"
-                                              asp-action="Vote"
-                                              method="post"
-                                              class="d-inline">
+                                        <div class="vote-buttons">
 
-                                            @Html.AntiForgeryToken()
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-success vote-btn"
+                                                    data-review-id="@review.ReviewId"
+                                                    data-is-like="true">
 
-                                            <input type="hidden"
-                                                   name="reviewId"
-                                                   value="@review.ReviewId" />
+                                                👍 <span id="likes-@review.ReviewId">
+                                                    @(review.LikesCount ?? 0)
+                                                </span>
 
-                                            <input type="hidden"
-                                                   name="isLike"
-                                                   value="true" />
-
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-outline-success">
-                                                👍 @(review.LikesCount ?? 0)
                                             </button>
 
-                                        </form>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger vote-btn"
+                                                    data-review-id="@review.ReviewId"
+                                                    data-is-like="false">
 
-                                        <form asp-controller="Reviews"
-                                              asp-action="Vote"
-                                              method="post"
-                                              class="d-inline">
+                                                👎 <span id="dislikes-@review.ReviewId">
+                                                    @(review.DislikesCount ?? 0)
+                                                </span>
 
-                                            @Html.AntiForgeryToken()
-
-                                            <input type="hidden"
-                                                   name="reviewId"
-                                                   value="@review.ReviewId" />
-
-                                            <input type="hidden"
-                                                   name="isLike"
-                                                   value="false" />
-
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-outline-danger">
-                                                👎 @(review.DislikesCount ?? 0)
                                             </button>
 
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <span>
-                                            👍 @(review.LikesCount ?? 0)
-                                        </span>
-
-                                        <span class="ms-3">
-                                            👎 @(review.DislikesCount ?? 0)
-                                        </span>
+                                        </div>
                                     }
 
                                    <!-- Review Replies-->
@@ -579,3 +551,57 @@
 
     </div>
 </div>
+
+@section Scripts {
+
+        <script>
+
+            document.querySelectorAll(".vote-btn")
+            .forEach(button => {
+
+                button.addEventListener("click", async function () {
+
+                    const reviewId =
+                        this.dataset.reviewId;
+
+                    const isLike =
+                        this.dataset.isLike === "true";
+
+                    const token =
+                        document.querySelector(
+                            'input[name="__RequestVerificationToken"]'
+                        ).value;
+
+                    const response =
+                        await fetch('/Reviews/VoteAjax', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type':
+                                    'application/x-www-form-urlencoded',
+                                'RequestVerificationToken':
+                                    token
+                            },
+                            body:
+                                `reviewId=${reviewId}&isLike=${isLike}`
+                        });
+
+                    if (!response.ok)
+                        return;
+
+                    const data =
+                        await response.json();
+
+                    document.getElementById(
+                        `likes-${reviewId}`
+                    ).innerText = data.likes;
+
+                    document.getElementById(
+                        `dislikes-${reviewId}`
+                    ).innerText = data.dislikes;
+                });
+
+            });
+
+        </script>
+
+}

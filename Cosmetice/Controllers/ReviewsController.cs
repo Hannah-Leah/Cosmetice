@@ -443,5 +443,84 @@ namespace Cosmetice.Controllers
                 "Products",
                 new { id = productId });
         }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VoteAjax(
+    int reviewId,
+    bool isLike)
+        {
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var review = await _context.Reviews
+                .Include(r => r.ReviewVotes)
+                .FirstOrDefaultAsync(r =>
+                    r.ReviewId == reviewId);
+
+            if (review == null)
+                return NotFound();
+
+            if (review.UserId == userId)
+            {
+                return BadRequest();
+            }
+
+            var existingVote =
+                await _context.ReviewVotes
+                    .FirstOrDefaultAsync(v =>
+                        v.ReviewId == reviewId &&
+                        v.UserId == userId);
+
+            if (existingVote == null)
+            {
+                _context.ReviewVotes.Add(
+                    new ReviewVote
+                    {
+                        ReviewId = reviewId,
+                        UserId = userId,
+                        IsLike = isLike,
+                        CreatedAt = DateTime.UtcNow
+                    });
+
+                if (isLike)
+                    review.LikesCount++;
+                else
+                    review.DislikesCount++;
+            }
+            else if (existingVote.IsLike != isLike)
+            {
+                if (isLike)
+                {
+                    review.LikesCount++;
+                    review.DislikesCount--;
+                }
+                else
+                {
+                    review.LikesCount--;
+                    review.DislikesCount++;
+                }
+
+                existingVote.IsLike = isLike;
+            }
+            else
+            {
+                if (isLike)
+                    review.LikesCount--;
+                else
+                    review.DislikesCount--;
+
+                _context.ReviewVotes.Remove(existingVote);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new
+            {
+                likes = review.LikesCount,
+                dislikes = review.DislikesCount
+            });
+        }
     }
 }
