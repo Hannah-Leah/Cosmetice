@@ -1,0 +1,88 @@
+﻿@model Cosmetice.ViewModels.PublicListsViewModel
+
+<h2 class="mb-4">
+    🌍 Community Lists
+</h2>
+
+<div class="row">
+
+    @foreach (var list in Model.Lists)
+    {
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                @{
+                    var cover =
+                    list.CustomListItems
+                    .FirstOrDefault()?
+                    .Product?
+                    .ProductImages?
+                    .FirstOrDefault()?
+                    .ImageUrl
+                    ?? "/images/no-image.png";
+                }
+
+                <img src="@cover"
+                     class="card-img-top"
+                     style="height:250px; object-fit:cover;" />
+
+                <div class="card-body">
+
+                    @{
+                        var owner =
+                        Model.Users.ContainsKey(list.UserId)
+                        ? Model.Users[list.UserId]
+                        : null;
+                    }
+
+                <div class="d-flex align-items-center mb-3">
+
+                    <img src="@(owner?.ProfilePictureUrl ?? "/images/default-user.png")"
+                         class="rounded-circle me-2"
+                         width="40"
+                         height="40"
+                         style="object-fit:cover;" />
+
+                    <div>
+
+                        <strong>
+                            @(owner?.DisplayName ??
+                                                        owner?.UserName ??
+                                                        "Unknown User")
+                        </strong>
+
+                            <div class="small text-muted">
+                                @list.CreatedAt?.ToString("dd MMM yyyy")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <h5>@list.Name</h5>
+
+                    <p>
+                        @list.Description
+                    </p>
+
+                    <small class="text-muted">
+                        @list.CustomListItems.Count products
+                    </small>
+
+                    <br />
+
+                    <a asp-action="Details"
+                       asp-route-id="@list.CustomListId"
+                       class="btn beauty-btn mt-3">
+                        View List
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>

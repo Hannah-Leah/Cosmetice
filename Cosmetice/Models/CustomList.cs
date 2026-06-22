@@ -20,4 +20,6 @@ public partial class CustomList
     public DateTime? CreatedAt { get; set; }
 
     public virtual ICollection<CustomListItem> CustomListItems { get; set; } = new List<CustomListItem>();
+
+    
 }

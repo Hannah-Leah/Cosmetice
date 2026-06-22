@@ -93,10 +93,18 @@
                                 <a class="nav-link"
                                    asp-controller="CustomLists"
                                    asp-action="Index">
-                                    📋 My Lists
+                                     My Lists
                                 </a>
                             </li>
                         }
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="CustomLists"
+                               asp-action="PublicLists">
+                                🌍 Public Lists
+                            </a>
+                        </li>
 
                         @if (User.IsInRole("Admin"))
                         {

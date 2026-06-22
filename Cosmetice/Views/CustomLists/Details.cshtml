@@ -1,0 +1,71 @@
+﻿@model Cosmetice.Models.CustomList
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+
+    <div class="mb-4">
+
+        <h1>@Model.Name</h1>
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <p class="text-muted">
+                @Model.Description
+            </p>
+        }
+
+        <small class="text-secondary">
+            @Model.CustomListItems.Count products
+        </small>
+
+    </div>
+
+    <div class="row">
+
+        @foreach (var item in Model.CustomListItems)
+        {
+            <div class="col-md-3 mb-4">
+
+                <div class="card h-100 shadow-sm">
+
+                    <img src="@(item.Product.ProductImages.FirstOrDefault()?.ImageUrl
+                                                          ?? "/images/no-image.png")"
+                     class="card-img-top"
+                     style="height:250px;object-fit:cover;" />
+
+                    <div class="card-body">
+
+                        <div class="text-muted small">
+                            @item.Product.Brand?.Name
+                        </div>
+
+                        <h5>
+                            @item.Product.Name
+                        </h5>
+
+                        <div class="mb-2">
+                            ⭐ @(item.Product.AverageRating ?? 0)
+                        </div>
+
+                        <a asp-controller="Products"
+                           asp-action="Details"
+                           asp-route-id="@item.Product.ProductId"
+                           class="btn beauty-btn w-100">
+
+                            View Product
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+                }
+
+    </div>
+
+</div>

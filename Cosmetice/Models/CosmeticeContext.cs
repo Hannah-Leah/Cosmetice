@@ -81,6 +81,8 @@ public partial class CosmeticeContext : DbContext
             entity.Property(e => e.UserId)
                 .IsRequired()
                 .HasMaxLength(450);
+
+           
         });
 
         modelBuilder.Entity<CustomListItem>(entity =>

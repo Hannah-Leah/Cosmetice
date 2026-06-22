@@ -1,4 +1,6 @@
-﻿using Cosmetice.Models;
+﻿using Cosmetice.Data;
+using Cosmetice.Models;
+using Cosmetice.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +12,12 @@ namespace Cosmetice.Controllers
     public class CustomListsController : Controller
     {
         private readonly CosmeticeContext _context;
+        private readonly ApplicationDbContext _identityContext; 
 
-        public CustomListsController(CosmeticeContext context)
+        public CustomListsController(CosmeticeContext context, ApplicationDbContext identityContext)
         {
             _context = context;
+            _identityContext = identityContext;
         }
 
         // MY LISTS
@@ -24,12 +28,21 @@ namespace Cosmetice.Controllers
                 User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var lists = await _context.CustomLists
-                .Include(l => l.CustomListItems)
-                    .ThenInclude(i => i.Product)
-                     .ThenInclude(p => p.ProductImages)
-                .Where(l => l.UserId == userId)
-                .OrderByDescending(l => l.CreatedAt)
-                .ToListAsync();
+      .Include(l => l.CustomListItems)
+          .ThenInclude(i => i.Product)
+              .ThenInclude(p => p.ProductImages)
+      .Where(l => l.IsPublic == true)
+      .OrderByDescending(l => l.CreatedAt)
+      .ToListAsync();
+
+            var userIds = lists
+    .Select(x => x.UserId)
+    .Distinct()
+    .ToList();
+
+            var users = await _identityContext.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id);
 
             return View(lists);
         }
@@ -121,6 +134,52 @@ namespace Cosmetice.Controllers
             }
 
             return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        // PUBLIC LISTS
+        public async Task<IActionResult> PublicLists()
+        {
+            var lists = await _context.CustomLists
+                .Include(l => l.CustomListItems)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.ProductImages)
+                .Where(l => l.IsPublic == true)
+                .OrderByDescending(l => l.CreatedAt)
+                .ToListAsync();
+
+            var userIds = lists
+                .Select(l => l.UserId)
+                .Distinct()
+                .ToList();
+
+            var users = await _identityContext.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id);
+
+            var vm = new PublicListsViewModel
+            {
+                Lists = lists,
+                Users = users
+            };
+
+            return View(vm);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var list = await _context.CustomLists
+                .Include(l => l.CustomListItems)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.Brand)
+                .Include(l => l.CustomListItems)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.ProductImages)
+                .FirstOrDefaultAsync(l => l.CustomListId == id);
+
+            if (list == null)
+                return NotFound();
+
+            return View(list);
         }
     }
 }
