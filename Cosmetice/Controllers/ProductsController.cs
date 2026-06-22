@@ -203,7 +203,9 @@ namespace Cosmetice.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+     .Include(p => p.ProductImages)
+     .FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
                 return NotFound();
@@ -219,7 +221,7 @@ namespace Cosmetice.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,BrandId,CategoryId,Name,Description,ReleaseDate,CountryOfOrigin,Price,SkinType,IsVegan,Shade,Ingredients,Volume,FinishType,AverageRating,ReviewCount,CreatedAt")] Product product, List<IFormFile> imageFiles)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,BrandId,CategoryId,Name,Description,ReleaseDate,CountryOfOrigin,Price,SkinType,IsVegan,Shade,Ingredients,Volume,FinishType,AverageRating,ReviewCount,CreatedAt")] Product product, List<IFormFile> imageFiles, List<int> imagesToDelete)
         {
             if (id != product.ProductId)
             {
@@ -228,9 +230,27 @@ namespace Cosmetice.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name", product.BrandId);
-                ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
-                return View(product);
+                //ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name", product.BrandId);
+                //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
+                //return View(product);
+
+                var reloadProduct = await _context.Products
+        .Include(p => p.ProductImages)
+        .FirstOrDefaultAsync(p => p.ProductId == id);
+
+                ViewData["BrandId"] =
+                    new SelectList(_context.Brands,
+                        "BrandId",
+                        "Name",
+                        product.BrandId);
+
+                ViewData["CategoryId"] =
+                    new SelectList(_context.Categories,
+                        "CategoryId",
+                        "Name",
+                        product.CategoryId);
+
+                return View(reloadProduct);
             }
                 try
                 {
@@ -241,6 +261,28 @@ namespace Cosmetice.Controllers
                 if (existingProduct == null)
                 {
                     return NotFound();
+                }
+
+                if (imagesToDelete != null && imagesToDelete.Any())
+                {
+                    var images = existingProduct.ProductImages
+                        .Where(i => imagesToDelete.Contains(i.ProductImageId))
+                        .ToList();
+
+                    foreach (var image in images)
+                    {
+                        var fullPath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot",
+                            image.ImageUrl.TrimStart('/'));
+
+                        if (System.IO.File.Exists(fullPath))
+                        {
+                            System.IO.File.Delete(fullPath);
+                        }
+
+                        _context.ProductImages.Remove(image);
+                    }
                 }
 
 
