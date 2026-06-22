@@ -124,13 +124,15 @@ namespace Cosmetice.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await _context.Reviews
+                .Include(r => r.ReviewImages)
+                .FirstOrDefaultAsync(r => r.ReviewId == id);
 
             if (review == null)
                 return NotFound();
 
-            var userId = User.FindFirstValue(
-                ClaimTypes.NameIdentifier);
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (review.UserId != userId)
                 return Forbid();
@@ -144,7 +146,9 @@ namespace Cosmetice.Controllers
                 Rating = review.Rating,
                 Pros = review.Pros,
                 Cons = review.Cons,
-                SkinType = review.SkinType
+                SkinType = review.SkinType,
+
+                ExistingImages = review.ReviewImages.ToList()
             };
 
             return View(vm);
@@ -155,9 +159,10 @@ namespace Cosmetice.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
-    EditReviewViewModel model)
+    EditReviewViewModel model, List<IFormFile> newImages)
         {
             var review = await _context.Reviews
+                 .Include(r => r.ReviewImages)
                 .FirstOrDefaultAsync(r =>
                     r.ReviewId == model.ReviewId);
 
@@ -169,6 +174,55 @@ namespace Cosmetice.Controllers
 
             if (review.UserId != userId)
                 return Forbid();
+
+            if (model.ImagesToDelete != null)
+            {
+                var imagesToRemove = review.ReviewImages
+                    .Where(x => model.ImagesToDelete.Contains(x.ReviewImageId))
+                    .ToList();
+
+                foreach (var image in imagesToRemove)
+                {
+                    var fullPath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        image.ImageUrl.TrimStart('/'));
+
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+
+                    _context.ReviewImages.Remove(image);
+                }
+            }
+
+            if (newImages != null && newImages.Any())
+            {
+                foreach (var imageFile in newImages)
+                {
+                    var fileName =
+                        Guid.NewGuid() +
+                        Path.GetExtension(imageFile.FileName);
+
+                    var filePath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot/reviewimages",
+                        fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    review.ReviewImages.Add(
+                        new ReviewImage
+                        {
+                            ReviewId = review.ReviewId,
+                            ImageUrl = "/reviewimages/" + fileName
+                        });
+                }
+            }
 
             review.Title = model.Title;
             review.Content = model.Content;

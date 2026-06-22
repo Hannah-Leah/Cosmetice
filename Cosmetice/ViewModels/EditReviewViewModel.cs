@@ -1,4 +1,6 @@
-﻿namespace Cosmetice.ViewModels
+﻿using Cosmetice.Models;
+
+namespace Cosmetice.ViewModels
 {
     public class EditReviewViewModel
     {
@@ -17,5 +19,11 @@
         public string Cons { get; set; }
 
         public string SkinType { get; set; }
+
+        public List<ReviewImage> ExistingImages { get; set; }
+    = new();
+
+        public List<int> ImagesToDelete { get; set; }
+            = new();
     }
 }

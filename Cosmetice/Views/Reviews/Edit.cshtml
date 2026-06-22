@@ -10,7 +10,7 @@
 
         <h2 class="mb-4">💖 Edit Review</h2>
 
-        <form asp-action="Edit" method="post">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
 
             <input asp-for="ReviewId" type="hidden" />
             <input asp-for="ProductId" type="hidden" />
@@ -49,13 +49,75 @@
                 <textarea asp-for="Cons"
                           class="form-control"
                           rows="3"></textarea>
-            </div>4
+            </div>
 
             <div class="mb-3">
                 <label class="form-label">Review</label>
                 <textarea asp-for="Content"
                           class="form-control"
                           rows="6"></textarea>
+            </div>
+
+            <hr />
+
+            <h5 class="mb-3">
+                Current Images
+            </h5>
+
+            @if (Model.ExistingImages.Any())
+            {
+                <div class="row">
+
+                    @foreach (var image in Model.ExistingImages)
+                    {
+                        <div class="col-md-3 mb-3">
+
+                            <div class="card">
+
+                                <img src="@image.ImageUrl"
+                                     class="card-img-top"
+                                     style="height:200px;object-fit:cover;" />
+
+                                <div class="card-body text-center">
+
+                                    <div class="form-check">
+
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="ImagesToDelete"
+                                               value="@image.ReviewImageId" />
+
+                                        <label class="form-check-label">
+                                            Delete
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">
+                    No images uploaded.
+                </p>
+            }
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Add New Images
+                </label>
+
+                <input type="file"
+                       name="newImages"
+                       multiple
+                       class="form-control" />
             </div>
 
             <button type="submit"
