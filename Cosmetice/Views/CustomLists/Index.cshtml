@@ -1,0 +1,119 @@
+﻿@model IEnumerable<Cosmetice.Models.CustomList>
+
+<h2 class="mb-4"> Custom Lists</h2>
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <h4>Create New List</h4>
+
+        <form asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="text"
+                   name="name"
+                   class="form-control mb-2"
+                   placeholder="List Name"
+                   required />
+
+            <textarea name="description"
+                      class="form-control mb-2"
+                      placeholder="Description">
+            </textarea>
+
+            <div class="form-check mb-3">
+
+                <input type="checkbox"
+                       name="isPublic"
+                       value="true"
+                       class="form-check-input" />
+
+                <label class="form-check-label">
+                    Public List
+                </label>
+
+            </div>
+
+            <button class="btn beauty-btn">
+                Create List
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+@foreach (var list in Model)
+{
+
+
+    <div class="card mb-3 shadow-sm">
+
+        <div class="card-header">
+
+            <button class="btn w-100 text-start"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#list-@list.CustomListId">
+
+                📋 @list.Name
+                (@list.CustomListItems.Count products)
+
+            </button>
+
+        </div>
+
+        <div id="list-@list.CustomListId"
+             class="collapse">
+
+            <div class="card-body">
+
+                @foreach (var item in list.CustomListItems)
+                {
+                    <div class="col-md-3 mb-3">
+
+                        <div class="card h-100">
+
+                            <img src="@(item.Product.ProductImages.FirstOrDefault()?.ImageUrl
+                                                                 ?? "/images/no-image.png")"
+                         class="card-img-top"
+                         style="height:200px;object-fit:cover;" />
+
+                            <div class="card-body">
+
+                                <h6>
+                                    @item.Product.Name
+                                </h6>
+
+                                <form asp-action="RemoveProduct"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="customListItemId"
+                                           value="@item.CustomListItemId" />
+
+                                    <button class="btn btn-sm btn-danger">
+                                        Remove
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                        }
+
+            </div>
+
+        </div>
+
+    </div>
+}

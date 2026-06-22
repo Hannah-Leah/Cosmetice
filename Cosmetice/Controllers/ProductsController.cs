@@ -106,6 +106,19 @@ namespace Cosmetice.Controllers
                     .Where(u => userIds.Contains(u.Id))
                     .ToDictionaryAsync(u => u.Id);
 
+            ViewBag.CustomLists = new List<CustomList>();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId =
+                    User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                ViewBag.CustomLists =
+                    await _context.CustomLists
+                        .Where(l => l.UserId == userId)
+                        .ToListAsync();
+            }
+
             return View(new ProductDetailsViewModel
             {
                 Product = product,

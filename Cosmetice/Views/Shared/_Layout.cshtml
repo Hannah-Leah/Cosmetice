@@ -87,6 +87,17 @@
                             </li>
                         }
 
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="CustomLists"
+                                   asp-action="Index">
+                                    📋 My Lists
+                                </a>
+                            </li>
+                        }
+
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">

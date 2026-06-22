@@ -160,6 +160,53 @@
 
                 </div>
 
+                <!---------------------------------------- Add to customlists -------------------------->
+                @if (User.Identity.IsAuthenticated)
+                {
+                    var customLists =
+                    ViewBag.CustomLists as List<CustomList>;
+
+                    if (customLists.Any())
+                    {
+                        <div class="card mt-4 shadow-sm">
+                            <div class="card-body">
+
+                                <h5>📋 Add To Custom List</h5>
+
+                                <form asp-controller="CustomLists"
+                                      asp-action="AddProduct"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="productId"
+                                           value="@product.ProductId" />
+
+                                    <select name="customListId"
+                                            class="form-select mb-3">
+
+                                        @foreach (var list in customLists)
+                                        {
+                                            <option value="@list.CustomListId">
+                                                @list.Name
+                                            </option>
+                                        }
+
+                                    </select>
+
+                                    <button type="submit"
+                                            class="btn beauty-btn">
+                                        Add To List
+                                    </button>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    }
+                }
+
                 <!-----------------WRITE REVIEW----------------->
 
                 @if (User.Identity.IsAuthenticated)
@@ -249,6 +296,9 @@
                         Please log in to write a review.
                     </div>
                 }
+
+
+               
 
                 <!-----------------USER REVIEWS----------------->
 
