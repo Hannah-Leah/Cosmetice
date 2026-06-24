@@ -16,6 +16,20 @@
     ViewData["Title"] = "Details";
 }
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
 <div class="container mt-5">
     <div class="card shadow-lg border-0 rounded-4 p-4">
         <div class="row">
@@ -550,6 +564,7 @@
             </div>
 
     </div>
+</div>
 </div>
 
 @section Scripts {

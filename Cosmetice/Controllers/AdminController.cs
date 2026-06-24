@@ -31,59 +31,186 @@ namespace Cosmetice.Controllers
         // delete user
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user != null)
+
+            if (user == null)
             {
-                var result = await _userManager.DeleteAsync(user);
-                if (result.Succeeded)
+                TempData["Error"] = "User not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Check if user is an admin
+            bool isAdmin =
+                await _userManager.IsInRoleAsync(user, "Admin");
+
+            if (isAdmin)
+            {
+                var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+                if (admins.Count <= 1)
                 {
-                    return RedirectToAction("Index");
+                    TempData["Error"] =
+                        "You cannot delete the last administrator.";
+
+                    return RedirectToAction(nameof(Index));
                 }
-                else
+            }
+
+
+            var currentUserId =
+                _userManager.GetUserId(User);
+
+            if (user.Id == currentUserId)
+            {
+                TempData["Error"] =
+                    "You cannot delete your own account.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Favorites
+            var favorites = await _context.Favorites
+                .Where(x => x.UserId == id)
+                .ToListAsync();
+
+            _context.Favorites.RemoveRange(favorites);
+
+            // Review votes
+            var votes = await _context.ReviewVotes
+                .Where(x => x.UserId == id)
+                .ToListAsync();
+
+            _context.ReviewVotes.RemoveRange(votes);
+
+            // Reviews
+            var reviews = await _context.Reviews
+      .Include(r => r.ReviewImages)
+      .Where(r => r.UserId == id)
+      .ToListAsync();
+
+            foreach (var review in reviews)
+            {
+                foreach (var image in review.ReviewImages)
                 {
-                    // Handle deletion failure
-                    ModelState.AddModelError("", "Failed to delete user.");
+                    var path = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        image.ImageUrl.TrimStart('/'));
+
+                    if (System.IO.File.Exists(path))
+                    {
+                        System.IO.File.Delete(path);
+                    }
                 }
+            }
+
+            // replies on reviews
+
+            var reviewIds = reviews
+    .Select(r => r.ReviewId)
+    .ToList();
+
+            var repliesOnReviews = await _context.ReviewReplies
+                .Where(r => reviewIds.Contains(r.ReviewId))
+                .ToListAsync();
+
+            _context.ReviewReplies.RemoveRange(repliesOnReviews);
+            _context.Reviews.RemoveRange(reviews);
+
+            // Custom Lists
+            var lists = await _context.CustomLists
+     .Include(l => l.CustomListItems)
+     .Where(l => l.UserId == id)
+     .ToListAsync();
+
+            var listItems = lists
+                .SelectMany(l => l.CustomListItems)
+                .ToList();
+
+            _context.CustomListItems.RemoveRange(listItems);
+            _context.CustomLists.RemoveRange(lists);
+
+            await _context.SaveChangesAsync();
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                TempData["Error"] =
+                    string.Join(", ", result.Errors.Select(e => e.Description));
             }
             else
             {
-                // Handle user not found
-                ModelState.AddModelError("", "User not found.");
+                TempData["Success"] =
+                    $"User '{user.UserName}' was deleted.";
             }
-            return RedirectToAction("Index");
+
+            return RedirectToAction(nameof(Index));
         }
 
         // toggle admin role
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleAdmin(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user != null)
+
+            if (user == null)
             {
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                TempData["Error"] = "User not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool isAdmin =
+                await _userManager.IsInRoleAsync(user, "Admin");
+
+            if (isAdmin)
+            {
+                var admins =
+                    await _userManager.GetUsersInRoleAsync("Admin");
+
+                if (admins.Count <= 1)
                 {
-                    await _userManager.RemoveFromRoleAsync(user, "Admin");
+                    TempData["Error"] =
+                        "You cannot remove the last administrator.";
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                await _userManager.RemoveFromRoleAsync(user, "Admin");
+
+                if (!await _userManager.IsInRoleAsync(user, "User"))
+                {
                     await _userManager.AddToRoleAsync(user, "User");
                 }
-                else
-                {
-                    await _userManager.RemoveFromRoleAsync(user, "User");
-                    await _userManager.AddToRoleAsync(user, "Admin");
-                }
+
+                TempData["Success"] =
+                    $"{user.UserName} was demoted to User.";
             }
-            return RedirectToAction("Index");
+            else
+            {
+                await _userManager.AddToRoleAsync(user, "Admin");
+
+                TempData["Success"] =
+                    $"{user.UserName} was promoted to Admin.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // view user details
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+
+            if (user == null)
+                return NotFound();
 
             return View(user);
         }
