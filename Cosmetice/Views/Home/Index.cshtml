@@ -45,7 +45,7 @@
                    name="SearchString"
                    value="@ViewData["CurrentFilter"]"
                    class="form-control search-input"
-                   placeholder="Search products, brands, skincare..." />
+                   placeholder="Search products, brands, category..." />
 
             <button type="submit"
                     class="btn beauty-btn ms-2">
@@ -54,6 +54,111 @@
 
         </form>
     </div>
+
+    <!-- Filter -->
+
+    <div class="row mb-4">
+
+    <div class="col-md-4">
+
+        <form asp-action="Index" method="get">
+
+            <input type="hidden"
+                   name="SearchString"
+                   value="@ViewData["CurrentFilter"]" />
+
+            <select name="sortOrder"
+                    class="form-select"
+                    onchange="this.form.submit()">
+
+                <option value="">Newest Added</option>
+
+                <option value="rating"
+                        selected="@(ViewBag.CurrentSort == "rating")">
+                    Highest Rated
+                </option>
+
+                <option value="reviews"
+                        selected="@(ViewBag.CurrentSort == "reviews")">
+                    Most Reviewed
+                </option>
+
+                <option value="newest"
+                        selected="@(ViewBag.CurrentSort == "newest")">
+                    Newest Release
+                </option>
+
+                <option value="price-low"
+                        selected="@(ViewBag.CurrentSort == "price-low")">
+                    Lowest Price
+                </option>
+
+                <option value="price-high"
+                        selected="@(ViewBag.CurrentSort == "price-high")">
+                    Highest Price
+                </option>
+
+            </select>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- TOP PRODUCTS-->
+
+    @* <h2 class="mb-4">
+        🏆 Top Ranked Products
+    </h2>
+
+    <div class="row mb-5">
+
+        @{
+            var topProducts =
+            ViewBag.TopProducts as List<Product>;
+        }
+
+        @if (topProducts != null)
+        {
+            int rank = 1;
+
+            foreach (var product in topProducts)
+            {
+                <div class="col-md-4 mb-3">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+
+                            <h4>
+                                #@rank
+                            </h4>
+
+                            <strong>
+                                @product.Name
+                            </strong>
+
+                            <div>
+                                ⭐ @product.AverageRating
+                            </div>
+
+                            <small>
+                                @(product.ReviewCount ?? 0) reviews
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                rank++;
+            }
+        }
+
+    </div> *@
+
     <!-- PRODUCTS -->
     <div class="row g-4">
         @foreach (var item in Model)

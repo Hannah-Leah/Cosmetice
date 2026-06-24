@@ -143,13 +143,13 @@
                 <span asp-validation-for="FinishType" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AverageRating" class="control-label"></label>
-                <input asp-for="AverageRating" class="form-control" />
+               @*  <label asp-for="AverageRating" class="control-label"></label> *@
+                <input type="hidden" asp-for="AverageRating" class="form-control" />
                 <span asp-validation-for="AverageRating" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReviewCount" class="control-label"></label>
-                <input asp-for="ReviewCount" class="form-control" />
+              @*   <label asp-for="ReviewCount" class="control-label"></label> *@
+                <input type="hidden" asp-for="ReviewCount" class="form-control" />
                 <span asp-validation-for="ReviewCount" class="text-danger"></span>
             </div>
             <div class="form-group">

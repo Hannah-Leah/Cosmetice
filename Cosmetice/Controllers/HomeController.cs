@@ -20,26 +20,56 @@ namespace Cosmetice.Controllers
             _identityContext = identityContext;
         }
 
-        public async Task<IActionResult> Index(string searchString, int? pageNumber)
+        public async Task<IActionResult> Index(string searchString, int? pageNumber, string sortOrder)
         {
             ViewData["CurrentFilter"] = searchString;
 
             var items = from s in _context.Products.Include(p => p.Category).Include(p => p.Brand).Include(p => p.ProductImages)
                         select s;
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                items = items.Where(s =>
-                    (s.Brand != null && s.Brand.Name.Contains(searchString)) ||
-                    (s.Category != null && s.Category.Name.Contains(searchString)) 
+                searchString = searchString.Trim();
+
+                items = items.Where(p =>
+                    p.Name.Contains(searchString) ||
+
+                    (p.Brand != null &&
+                     p.Brand.Name.Contains(searchString)) ||
+
+                    (p.Category != null &&
+                     p.Category.Name.Contains(searchString))
                 );
             }
 
-     
+            // filtering
+            ViewBag.CurrentSort = sortOrder;
+            items = sortOrder switch
+            {
+                "rating" =>
+                    items.OrderByDescending(p => p.AverageRating),
+
+                "reviews" =>
+                    items.OrderByDescending(p => p.ReviewCount),
+
+                "newest" =>
+                    items.OrderByDescending(p => p.ReleaseDate),
+
+                "price-low" =>
+                    items.OrderBy(p => p.Price),
+
+                "price-high" =>
+                    items.OrderByDescending(p => p.Price),
+
+                _ =>
+                    items.OrderByDescending(p => p.CreatedAt)
+            };
+
+
 
             // pagination
             // items per page
-            int pageSize = 6;
+            int pageSize = 12;
             int pageIndex = pageNumber ?? 1;
 
             var pagedItems = await items
@@ -68,6 +98,18 @@ namespace Cosmetice.Controllers
                 ViewBag.FavoriteIds = new List<int>
                 ();
             }
+
+            // top products
+
+            ViewBag.TopProducts = await _context.Products
+    .Include(p => p.Brand)
+    .Include(p => p.ProductImages)
+    .OrderByDescending(p => p.AverageRating)
+    .ThenByDescending(p => p.ReviewCount)
+    .Take(5)
+    .ToListAsync();
+
+
 
             return View(pagedItems);
         }
