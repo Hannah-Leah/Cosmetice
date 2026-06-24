@@ -446,12 +446,16 @@
 
                                 @if (review.ReviewImages.Any())
                                 {
-                                    <div class="review-images">
+                                    @* <div class="review-images"> *@
+                                    <div class="review-images-grid">
 
                                         @foreach (var image in review.ReviewImages)
                                         {
+                                            @* <img src="@image.ImageUrl"
+                                                 class="review-image" style="width:200px; height: 200px" /> *@
                                             <img src="@image.ImageUrl"
-                                                 class="review-image" style="width:200px; height: 200px" />
+                                                 class="review-image-grid"
+                                                 onclick="window.open(this.src,'_blank')" />
                                         }
 
                                     </div>

@@ -341,6 +341,22 @@ body {
         border: 2px solid #ffd6ea;
     }*/
 
+.review-images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+
+}
+
+.review-image-grid {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
 
 /* REPLIES */
 .reply-thread {
@@ -433,6 +449,8 @@ body {
         transform: scale(1.1);
         color: hotpink;
     }
+
+
 
 
 

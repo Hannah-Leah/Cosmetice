@@ -107,16 +107,15 @@
 </div>
 
 <!-- TOP PRODUCTS-->
-
-    @* <h2 class="mb-4">
+@* 
+    <h2 class="mb-4">
         🏆 Top Ranked Products
     </h2>
 
-    <div class="row mb-5">
+    <div class="row g-4 mb-5">
 
         @{
-            var topProducts =
-            ViewBag.TopProducts as List<Product>;
+            var topProducts = ViewBag.TopProducts as List<Product>;
         }
 
         @if (topProducts != null)
@@ -125,27 +124,44 @@
 
             foreach (var product in topProducts)
             {
-                <div class="col-md-4 mb-3">
+                <div class="col-lg-4 col-md-6">
 
-                    <div class="card shadow-sm">
+                    <div class="top-product-card">
 
-                        <div class="card-body">
+                        <div class="rank-badge">
+                            #@rank
+                        </div>
 
-                            <h4>
-                                #@rank
-                            </h4>
+                        <img src="@(product.ProductImages.FirstOrDefault()?.ImageUrl
+                                                             ?? "/images/no-image.png")"
+                     class="top-product-image" />
 
-                            <strong>
+                        <div class="p-3">
+
+                            <div class="beauty-brand">
+                                @product.Brand?.Name
+                            </div>
+
+                            <h5 class="top-product-name">
                                 @product.Name
-                            </strong>
+                            </h5>
 
-                            <div>
+                            <div class="mt-2">
                                 ⭐ @product.AverageRating
                             </div>
 
-                            <small>
+                            <small class="text-muted">
                                 @(product.ReviewCount ?? 0) reviews
                             </small>
+
+                            <a asp-controller="Products"
+                               asp-action="Details"
+                               asp-route-id="@product.ProductId"
+                               class="btn beauty-btn w-100 mt-3">
+
+                                View Product
+
+                            </a>
 
                         </div>
 
