@@ -28,21 +28,12 @@ namespace Cosmetice.Controllers
                 User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var lists = await _context.CustomLists
-      .Include(l => l.CustomListItems)
-          .ThenInclude(i => i.Product)
-              .ThenInclude(p => p.ProductImages)
-      .Where(l => l.IsPublic == true)
-      .OrderByDescending(l => l.CreatedAt)
-      .ToListAsync();
-
-            var userIds = lists
-    .Select(x => x.UserId)
-    .Distinct()
-    .ToList();
-
-            var users = await _identityContext.Users
-                .Where(u => userIds.Contains(u.Id))
-                .ToDictionaryAsync(u => u.Id);
+                .Include(l => l.CustomListItems)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.ProductImages)
+                .Where(l => l.UserId == userId)
+                .OrderByDescending(l => l.CreatedAt)
+                .ToListAsync();
 
             return View(lists);
         }
@@ -180,6 +171,37 @@ namespace Cosmetice.Controllers
                 return NotFound();
 
             return View(list);
+        }
+
+        // delete list
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var list = await _context.CustomLists
+                .Include(l => l.CustomListItems)
+                .FirstOrDefaultAsync(l =>
+                    l.CustomListId == id &&
+                    l.UserId == userId);
+
+            if (list == null)
+                return Unauthorized();
+
+            _context.CustomListItems.RemoveRange(
+                list.CustomListItems);
+
+            _context.CustomLists.Remove(list);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] =
+                $"List '{list.Name}' deleted.";
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

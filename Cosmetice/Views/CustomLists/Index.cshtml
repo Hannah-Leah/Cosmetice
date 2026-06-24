@@ -45,75 +45,121 @@
 
     </div>
 
-</div>
+    @if (!Model.Any())
+    {
+        <div class="card shadow-sm p-5 text-center">
 
-@foreach (var list in Model)
-{
+            <h4>No custom lists yet</h4>
 
-
-    <div class="card mb-3 shadow-sm">
-
-        <div class="card-header">
-
-            <button class="btn w-100 text-start"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#list-@list.CustomListId">
-
-                📋 @list.Name
-                (@list.CustomListItems.Count products)
-
-            </button>
+            <p class="text-muted">
+                Create your first beauty collection above!
+            </p>
 
         </div>
+    }
 
-        <div id="list-@list.CustomListId"
-             class="collapse">
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="row">
+
+    @foreach (var list in Model)
+    {
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                @{
+                    var cover =
+                    list.CustomListItems
+                    .FirstOrDefault()?
+                    .Product?
+                    .ProductImages?
+                    .FirstOrDefault()?
+                    .ImageUrl
+                    ?? "/images/no-image.png";
+                }
+
+            <img src="@cover"
+                 class="card-img-top"
+                 style="height:250px; object-fit:cover;" />
 
             <div class="card-body">
 
-                @foreach (var item in list.CustomListItems)
-                {
-                    <div class="col-md-3 mb-3">
+                <h5 class="card-title">
+                    📋 @list.Name
+                </h5>
 
-                        <div class="card h-100">
+                <p class="text-muted">
+                    @(string.IsNullOrWhiteSpace(list.Description)
+                                        ? "No description"
+                                        : list.Description)
+                </p>
 
-                            <img src="@(item.Product.ProductImages.FirstOrDefault()?.ImageUrl
-                                                                 ?? "/images/no-image.png")"
-                         class="card-img-top"
-                         style="height:200px;object-fit:cover;" />
+                    <div class="mb-3">
 
-                            <div class="card-body">
+                        <span class="badge bg-primary">
+                            @list.CustomListItems.Count products
+                        </span>
 
-                                <h6>
-                                    @item.Product.Name
-                                </h6>
-
-                                <form asp-action="RemoveProduct"
-                                      method="post">
-
-                                    @Html.AntiForgeryToken()
-
-                                    <input type="hidden"
-                                           name="customListItemId"
-                                           value="@item.CustomListItemId" />
-
-                                    <button class="btn btn-sm btn-danger">
-                                        Remove
-                                    </button>
-
-                                </form>
-
-                            </div>
-
-                        </div>
+                    @if (list.IsPublic == true)
+                        {
+                            <span class="badge bg-success">
+                                Public
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                Private
+                            </span>
+                        }
 
                     </div>
-                        }
+
+                    <small class="text-muted d-block mb-3">
+                        Created:
+                        @list.CreatedAt?.ToString("dd MMM yyyy")
+                    </small>
+
+                    <div class="d-flex gap-2">
+
+                        <a asp-action="Details"
+                           asp-route-id="@list.CustomListId"
+                           class="btn beauty-btn flex-fill">
+                            View List
+                        </a>
+
+                        <form asp-action="Delete"
+                              method="post"
+                              onsubmit="return confirm('Delete this list?');">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@list.CustomListId" />
+
+                            <button type="submit"
+                                    class="btn btn-outline-danger">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
+    }
 
-    </div>
-}
+</div>
