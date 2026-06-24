@@ -53,7 +53,7 @@ namespace Cosmetice.Controllers
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string reviewSort = "recent")
         {
             if (id == null)
             {
@@ -118,6 +118,30 @@ namespace Cosmetice.Controllers
                         .Where(l => l.UserId == userId)
                         .ToListAsync();
             }
+
+            ViewBag.ReviewSort = reviewSort;
+
+            product.Reviews = reviewSort switch
+            {
+                "liked" => product.Reviews
+                    .OrderByDescending(r => r.LikesCount ?? 0)
+                    .ThenByDescending(r => r.CreatedAt)
+                    .ToList(),
+
+                "highest" => product.Reviews
+         .OrderByDescending(r => r.Rating)
+         .ThenByDescending(r => r.CreatedAt)
+         .ToList(),
+
+                "lowest" => product.Reviews
+                    .OrderBy(r => r.Rating)
+                    .ThenByDescending(r => r.CreatedAt)
+                    .ToList(),
+
+                _ => product.Reviews
+                    .OrderByDescending(r => r.CreatedAt)
+                    .ToList()
+            };
 
             return View(new ProductDetailsViewModel
             {

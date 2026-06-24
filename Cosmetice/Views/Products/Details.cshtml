@@ -311,7 +311,45 @@
                     </div>
                 }
 
+                <!--FILTERING-->
 
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <h3 class="mb-0">
+                        💕 Community Reviews
+                    </h3>
+
+                    <form method="get"
+                          asp-controller="Products"
+                          asp-action="Details">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@product.ProductId" />
+
+                        <select name="reviewSort"
+                                class="form-select"
+                                onchange="this.form.submit()">
+
+                            <option value="recent"
+                                    selected="@(ViewBag.ReviewSort == "recent")">
+                                Most Recent
+                            </option>
+
+                            <option value="liked"
+                                    selected="@(ViewBag.ReviewSort == "liked")">
+                                Most Liked
+                            </option>
+
+                            <option value="highest">Highest Rated</option>
+
+                            <option value="lowest">Lowest Rated</option>
+
+                        </select>
+
+                    </form>
+
+                </div>
                
 
                 <!-----------------USER REVIEWS----------------->
@@ -319,13 +357,11 @@
                 <div class="reviews-section mt-5">
 
                     
-                    <h3 class="mb-4">
-                        💕 Community Reviews
-                    </h3>
+
 
                     @if (product.Reviews.Any())
                     {
-                        @foreach (var review in product.Reviews.OrderByDescending(r => r.CreatedAt))
+                        @foreach (var review in product.Reviews)
                         {
 
 
