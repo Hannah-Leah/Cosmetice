@@ -1,0 +1,120 @@
+﻿@model Cosmetice.Models.API.BeautyProductDto
+
+@{
+    ViewData["Title"] = "Ingredient Details";
+}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="row g-0">
+
+            <div class="col-md-4">
+
+                <img src="@Model.ImageUrl"
+                     class="img-fluid rounded-start"
+                     alt="@Model.ProductName" />
+
+            </div>
+
+            <div class="col-md-8">
+
+                <div class="card-body">
+
+                    <h2>@Model.ProductName</h2>
+
+                    <p class="text-muted">
+                        @Model.Brands
+                    </p>
+
+                    <hr />
+
+                    <h4>Ingredients</h4>
+
+                    <div class="ingredients-box p-3 border rounded bg-light">
+
+                        @if (!string.IsNullOrEmpty(Model.Ingredients))
+                        {
+                            @Model.Ingredients
+                        }
+                        else
+                        {
+                            <span>No ingredients available.</span>
+                        }
+
+                    </div>
+
+                    @{
+                        var ingredients =
+                        (Model.Ingredients ?? "").ToLower();
+
+                        var goodIngredients = new[]
+                        {
+                                        "glycerin",
+                                        "ceramide",
+                                        "niacinamide",
+                                        "hyaluronic acid",
+                                        "panthenol"
+                                        };
+
+                        var warningIngredients = new[]
+                        {
+                                        "fragrance",
+                                        "parfum",
+                                        "alcohol"
+                                        };
+                    }
+
+                    <div class="card mt-4">
+
+                        <div class="card-body">
+
+                            <h4>Ingredient Analysis</h4>
+
+                            <h6 class="text-success">
+                                Good Ingredients
+                            </h6>
+
+                            <ul>
+
+                                @foreach (var ingredient in goodIngredients)
+                                {
+                                    if (ingredients.Contains(ingredient))
+                                    {
+                                        <li>✓ @ingredient</li>
+                                    }
+                                }
+
+                            </ul>
+
+                            <h6 class="text-danger">
+                                Potential Irritants
+                            </h6>
+
+                            <ul>
+
+                                @foreach (var ingredient in warningIngredients)
+                                {
+                                    if (ingredients.Contains(ingredient))
+                                    {
+                                        <li>⚠ @ingredient</li>
+                                    }
+                                }
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
