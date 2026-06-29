@@ -134,8 +134,11 @@ namespace Cosmetice.Controllers
             var userId =
                 User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (review.UserId != userId)
+            if (review.UserId != userId &&
+     !User.IsInRole("Admin"))
+            {
                 return Forbid();
+            }
 
             var vm = new EditReviewViewModel
             {
@@ -172,8 +175,11 @@ namespace Cosmetice.Controllers
             var userId = User.FindFirstValue(
                 ClaimTypes.NameIdentifier);
 
-            if (review.UserId != userId)
+            if (review.UserId != userId &&
+    !User.IsInRole("Admin"))
+            {
                 return Forbid();
+            }
 
             if (model.ImagesToDelete != null)
             {
@@ -257,8 +263,11 @@ namespace Cosmetice.Controllers
             var userId = User.FindFirstValue(
                 ClaimTypes.NameIdentifier);
 
-            if (review.UserId != userId)
+            if (review.UserId != userId &&
+    !User.IsInRole("Admin"))
+            {
                 return Forbid();
+            }
 
             return View(review);
         }
@@ -282,8 +291,11 @@ namespace Cosmetice.Controllers
             var userId = User.FindFirstValue(
                 ClaimTypes.NameIdentifier);
 
-            if (review.UserId != userId)
+            if (review.UserId != userId &&
+    !User.IsInRole("Admin"))
+            {
                 return Forbid();
+            }
 
             int productId = review.ProductId;
 
@@ -521,6 +533,44 @@ namespace Cosmetice.Controllers
                 likes = review.LikesCount,
                 dislikes = review.DislikesCount
             });
+        }
+
+        // Delete reply
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteReply(int replyId)
+        {
+            var reply = await _context.ReviewReplies
+                .Include(r => r.InverseParentReply)
+                .FirstOrDefaultAsync(r => r.ReplyId == replyId);
+
+            if (reply == null)
+                return NotFound();
+
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            bool isAdmin = User.IsInRole("Admin");
+
+            if (reply.UserId != userId && !isAdmin)
+                return Forbid();
+
+            await DeleteReplyRecursive(reply);
+
+            await _context.SaveChangesAsync();
+
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        private async Task DeleteReplyRecursive(ReviewReply reply)
+        {
+            foreach (var child in reply.InverseParentReply.ToList())
+            {
+                await DeleteReplyRecursive(child);
+            }
+
+            _context.ReviewReplies.Remove(reply);
         }
     }
 }

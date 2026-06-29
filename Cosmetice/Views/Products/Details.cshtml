@@ -556,7 +556,7 @@
 
                                 <!--Edit or delete own review-->
 
-                                @if (currentUserId == review.UserId)
+                                @if (currentUserId == review.UserId || User.IsInRole("Admin") )
                                 {
                                     <div class="mt-2">
 

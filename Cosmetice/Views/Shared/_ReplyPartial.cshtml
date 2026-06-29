@@ -145,6 +145,33 @@
                     @reply.Content
                 </div>
 
+                @if (User.Identity.IsAuthenticated &&
+                                (User.FindFirstValue(ClaimTypes.NameIdentifier) == reply.UserId
+                                || User.IsInRole("Admin")))
+                {
+                    <div class="mt-2">
+
+                        <form asp-controller="Reviews"
+                              asp-action="DeleteReply"
+                              method="post"
+                              class="d-inline">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="replyId"
+                                   value="@reply.ReplyId" />
+
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-danger">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+                }
+
                 @if (User.Identity.IsAuthenticated)
                 {
                     <button class="reply-action"
