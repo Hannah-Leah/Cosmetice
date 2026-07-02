@@ -21,20 +21,35 @@ namespace Cosmetice.Controllers
         // search products
 
         [HttpGet]
-        public async Task<IActionResult> Search(string query)
+        public async Task<IActionResult> Search(
+    string query,
+    int page = 1)
         {
             if (string.IsNullOrWhiteSpace(query))
                 return View("Index");
 
+            const int pageSize = 24;
+
             string url =
-                $"https://world.openbeautyfacts.org/cgi/search.pl?search_terms={query}&search_simple=1&action=process&json=1";
+                $"https://world.openbeautyfacts.org/cgi/search.pl?" +
+                $"search_terms={Uri.EscapeDataString(query)}" +
+                $"&search_simple=1" +
+                $"&action=process" +
+                $"&json=1" +
+                $"&page={page}" +
+                $"&page_size={pageSize}";
 
             var response =
                 await _httpClient.GetStringAsync(url);
 
             var data =
-                JsonSerializer.Deserialize<OpenBeautyFactsResponse>(
-                    response);
+                JsonSerializer.Deserialize<OpenBeautyFactsResponse>(response);
+
+            ViewBag.Query = query;
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalPages =
+    (int)Math.Ceiling((double)data.Count / pageSize);
 
             return View("Results", data);
         }

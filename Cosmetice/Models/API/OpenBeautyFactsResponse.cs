@@ -6,6 +6,15 @@ namespace Cosmetice.Models.API
     {
         [JsonPropertyName("products")]
         public List<BeautyProductDto> Products { get; set; }
+
+        [JsonPropertyName("count")]
+        public int Count { get; set; }
+
+        [JsonPropertyName("page")]
+        public int Page { get; set; }
+
+        [JsonPropertyName("page_size")]
+        public int PageSize { get; set; }
     }
 
     public class BeautyProductDto
