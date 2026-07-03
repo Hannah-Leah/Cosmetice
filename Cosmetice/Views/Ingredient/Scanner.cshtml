@@ -1,0 +1,219 @@
+﻿@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger shadow-sm">
+
+        @TempData["Error"]
+
+    </div>
+}
+
+@{
+    ViewData["Title"] = "Barcode Scanner";
+}
+
+<h2 class="mb-4">
+    Beauty Product Scanner
+</h2>
+
+<div class="row">
+
+    <div class="text-center mb-4">
+
+        <button id="startScanner"
+                class="btn beauty-btn btn-lg">
+
+            📷 Start Camera
+
+        </button>
+
+    </div>
+
+    
+
+    <!-- Camera -->
+    <div class="col-lg-7">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h4>Scan with Camera</h4>
+
+                <div id="reader">
+
+                    <div class="scanner-placeholder">
+
+                        📷
+
+                        <h4 class="mt-3">
+
+                            Camera not started
+
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Click "Start Camera"
+                            to begin scanning.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Manual Search -->
+    <div class="col-lg-5">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h4>Manual Barcode</h4>
+
+                <form asp-action="ScanBarcode"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input name="barcode"
+                           class="form-control mb-3"
+                           placeholder="Enter barcode" />
+
+                    <button class="btn beauty-btn w-100">
+
+                        Search
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
+
+    <script>
+
+                document.querySelector(".scanner-placeholder").innerHTML = `
+       
+        <p>Please allow camera permission!</p>
+        `;
+
+        function onScanSuccess(decodedText)
+        {
+            window.location =
+                "/Ingredient/Details?code=" + decodedText;
+        }
+
+        document
+        .getElementById("startScanner")
+        .addEventListener("click", async function () {
+
+            const html5QrCode = new Html5Qrcode(
+                "reader",
+                {
+                    experimentalFeatures: {
+                        useBarCodeDetectorIfSupported: true
+                    }
+                });
+
+            const cameras =
+                await Html5Qrcode.getCameras();
+
+            if (!cameras.length) {
+                alert("No camera found.");
+                return;
+            }
+
+            const camera =
+                cameras.find(c =>
+                    c.label.toLowerCase().includes("back"))
+                || cameras[0];
+
+            await html5QrCode.start(
+                camera.id,
+                {
+                    fps: 20,
+
+                    qrbox: {
+                        width: 350,
+                        height: 170
+                    },
+
+                    videoConstraints: {
+                        facingMode: "environment",
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    }
+                },
+
+                onScanSuccess
+            );
+
+        });
+
+    </script>
+
+}
+
+@* @section Scripts{
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+
+    function onScanSuccess(decodedText)
+    {
+        window.location =
+            "/Ingredient/Details?code=" + decodedText;
+    }
+
+    document
+    .getElementById("startScanner")
+    .addEventListener("click", function(){
+
+    //     const scanner = new Html5QrcodeScanner(
+    //         "reader",
+    //         {
+    //             fps:20,
+    //                qrbox:{
+    //     width:350,
+    //     height:170
+    // }
+
+        const scanner = new Html5QrcodeScanner(
+        "reader",
+        {
+            fps: 20,
+            qrbox: 250,
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E
+            ]
+       
+
+              
+            });
+
+        scanner.render(onScanSuccess);
+
+    });
+
+</script>
+} *@

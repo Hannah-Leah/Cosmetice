@@ -72,10 +72,34 @@ namespace Cosmetice.Controllers
                 JsonSerializer.Deserialize<ProductDetailsResponse>(
                     response);
 
-            if (data?.Product == null)
-                return NotFound();
+            if (data == null ||
+       data.Product == null )
+            {
+                TempData["Error"] =
+                    "Sorry, this barcode could not be found in the Open Beauty Facts database.";
+
+                return RedirectToAction(nameof(Scanner));
+            }
+
+
 
             return View(data.Product);
+        }
+
+        public IActionResult Scanner()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ScanBarcode(string barcode)
+        {
+            if (string.IsNullOrWhiteSpace(barcode))
+                return RedirectToAction(nameof(Scanner));
+
+            return RedirectToAction(nameof(Details),
+                new { code = barcode });
         }
     }
 }

@@ -1,13 +1,77 @@
-﻿<h2>Ingredient Checker</h2>
+﻿@{
+    ViewData["Title"] = "Beauty Ingredient Checker";
+}
 
-<form asp-action="Search" method="get">
+<div class="container">
 
-    <input name="query"
-           class="form-control"
-           placeholder="Search product..." />
+    <div class="hero-section mb-5">
 
-    <button class="btn beauty-btn mt-2">
-        Search
-    </button>
+        <div class="hero-content">
 
-</form>
+            <h1> Ingredient Checker</h1>
+
+           
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-body p-5">
+
+            <h3 class="mb-4">
+
+                 Search a Product
+
+            </h3>
+
+            <form asp-action="Search"
+                  method="get">
+
+                <div class="input-group input-group-lg">
+
+                    <input name="query"
+                           class="form-control"
+                           placeholder="Example: cerave Moisturizing Cream" />
+
+                    <button class="btn beauty-btn">
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            <hr class="my-5" />
+
+            <div class="text-center">
+
+                <h4>
+
+                     Have the product with you? :D
+
+                </h4>
+
+                <p class="text-muted">
+
+                    Scan the barcode instantly!
+
+                </p>
+
+                <a asp-action="Scanner"
+                   class="btn beauty-btn btn-lg">
+
+                    Open Barcode Scanner
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
