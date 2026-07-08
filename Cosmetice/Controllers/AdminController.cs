@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Cosmetice.ViewModels;
 
 namespace Cosmetice.Controllers
 {
@@ -213,6 +215,47 @@ namespace Cosmetice.Controllers
                 return NotFound();
 
             return View(user);
+        }
+
+        public async Task<IActionResult> Reviews(string sort = "recent")
+        {
+            var reviews = _context.Reviews
+                .Include(r => r.Product)
+                .Include(r => r.ReviewImages)
+                .Include(r => r.ReviewReplies)
+                    .ThenInclude(r => r.InverseParentReply)
+                .AsQueryable();
+
+            reviews = sort switch
+            {
+                "liked" => reviews.OrderByDescending(r => r.LikesCount),
+                "rating" => reviews.OrderByDescending(r => r.Rating),
+                _ => reviews.OrderByDescending(r => r.CreatedAt)
+            };
+
+            var reviewList = await reviews.ToListAsync();
+
+            var userIds = reviewList
+                .Select(r => r.UserId)
+                .Concat(reviewList
+                    .SelectMany(r => r.ReviewReplies)
+                    .Select(r => r.UserId))
+                .Distinct()
+                .ToList();
+
+            var users = await _userManager.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id);
+
+            var vm = new AdminReviewsViewModel
+            {
+                Reviews = reviewList,
+                Users = users
+            };
+
+            ViewBag.Sort = sort;
+
+            return View(vm);
         }
     }
 }

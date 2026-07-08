@@ -1,0 +1,206 @@
+﻿@using System.Security.Claims
+@model Cosmetice.ViewModels.AdminReviewsViewModel
+
+@{
+    ViewData["Title"] = "Review Management";
+
+    var currentUserId =
+        User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+
+        <div>
+
+            <h2 class="fw-bold">
+                 Review Management
+            </h2>
+
+        </div>
+
+        <a asp-controller="Home"
+           asp-action="AdminPage"
+           class="btn btn-outline-secondary">
+
+            ← Back
+
+        </a>
+
+    </div>
+
+
+    @if (!Model.Reviews.Any())
+    {
+        <div class="alert alert-info">
+            There are no reviews yet.
+        </div>
+    }
+    else
+    {
+        foreach (var review in Model.Reviews)
+        {
+            var reviewUser =
+            Model.Users.ContainsKey(review.UserId)
+            ? Model.Users[review.UserId]
+            : null;
+
+            <div class="review-card mb-5">
+
+                <div class="d-flex align-items-center mb-3">
+
+                    <img src="@(reviewUser?.ProfilePictureUrl ?? "/images/default-user.png")"
+                         width="55"
+                         height="55"
+                         class="rounded-circle me-3"
+                         style="object-fit:cover;" />
+
+                    <div>
+
+                        <h5 class="mb-1">
+
+                            @(reviewUser?.DisplayName ??
+                                                reviewUser?.UserName ??
+                                                "Deleted User")
+
+                </h5>
+
+                        <div class="text-muted small">
+
+                    @if (!string.IsNullOrEmpty(reviewUser?.Country))
+                            {
+                                @reviewUser.Country
+                                <span> • </span>
+                            }
+
+                            @if (!string.IsNullOrEmpty(reviewUser?.SkinType))
+                            {
+                                @reviewUser.SkinType
+                                <span> skin • </span>
+                            }
+
+                            @review.CreatedAt?.ToString("dd MMM yyyy")
+
+                        </div>
+
+                    </div>
+
+                    <div class="ms-auto">
+
+                        <span class="badge bg-warning text-dark">
+
+                            ⭐ @review.Rating / 5
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <h4 class="mb-3">
+
+                    @review.Title
+
+                </h4>
+
+                <p>
+
+                    @review.Content
+
+                </p>
+
+                @if (!string.IsNullOrWhiteSpace(review.Pros))
+                {
+                    <div class="review-pros">
+
+                        <strong>💕 Pros</strong>
+
+                        <p class="mb-0">
+
+                            @review.Pros
+
+                        </p>
+
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(review.Cons))
+                {
+                    <div class="review-cons mt-3">
+
+                        <strong>💔 Cons</strong>
+
+                        <p class="mb-0">
+
+                            @review.Cons
+
+                        </p>
+
+                    </div>
+                }
+
+                @if (review.ReviewImages.Any())
+                {
+                    <div class="review-images-grid mt-4">
+
+                        @foreach (var image in review.ReviewImages)
+                        {
+                            <img src="@image.ImageUrl"
+                                 class="review-image-grid"
+                                 onclick="window.open(this.src,'_blank')" />
+                        }
+
+                    </div>
+                }
+
+                <div class="mt-4">
+
+                    <a asp-controller="Reviews"
+                       asp-action="Edit"
+                       asp-route-id="@review.ReviewId"
+                       class="btn btn-outline-primary btn-sm">
+
+                        Edit
+
+                    </a>
+
+                    <a asp-controller="Reviews"
+                       asp-action="Delete"
+                       asp-route-id="@review.ReviewId"
+                       class="btn btn-outline-danger btn-sm">
+
+                        Delete
+
+                    </a>
+
+                </div>
+
+                @if (review.ReviewReplies.Any())
+                {
+                    <hr class="my-4" />
+
+                    <h6 class="fw-bold mb-3">
+
+                        Replies
+
+                    </h6>
+
+                    @foreach (var reply in review.ReviewReplies
+                            .Where(r => r.ParentReplyId == null)
+                            .OrderBy(r => r.CreatedAt))
+                    {
+                        @await Html.PartialAsync(
+                        "_ReplyPartial",
+                new Cosmetice.ViewModels.ReplyViewModel
+                {
+                    Reply = reply,
+                    Users = Model.Users
+                })
+                }
+                }
+
+            </div>
+        }
+    }
+</div>
