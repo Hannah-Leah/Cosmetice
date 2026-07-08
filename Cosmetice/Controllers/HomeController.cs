@@ -69,7 +69,7 @@ namespace Cosmetice.Controllers
 
             // pagination
             // items per page
-            int pageSize = 12;
+            int pageSize = 8;
             int pageIndex = pageNumber ?? 1;
 
             var pagedItems = await items
