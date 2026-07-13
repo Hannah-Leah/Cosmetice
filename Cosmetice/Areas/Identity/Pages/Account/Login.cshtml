@@ -5,6 +5,167 @@
     ViewData["Title"] = "Log in";
 }
 
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-5 col-md-7">
+
+            <div class="auth-card shadow-lg">
+
+                <div class="text-center mb-4">
+
+                    
+
+                    <h2 class="beauty-title mb-2">
+                        Login
+                    </h2>
+
+                    
+
+                </div>
+
+                <form id="account" method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="alert alert-danger"
+                         role="alert">
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="Input.Email"
+                               class="form-label beauty-label">
+                            Email
+                        </label>
+
+                        <input asp-for="Input.Email"
+                               class="form-control beauty-input"
+                               autocomplete="username"
+                               placeholder="name@example.com" />
+
+                        <span asp-validation-for="Input.Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="Input.Password"
+                               class="form-label beauty-label">
+                            Password
+                        </label>
+
+                        <input asp-for="Input.Password"
+                               class="form-control beauty-input"
+                               autocomplete="current-password"
+                               placeholder="Password" />
+
+                        <span asp-validation-for="Input.Password"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="form-check mb-4">
+
+                        <input class="form-check-input"
+                               asp-for="Input.RememberMe" />
+
+                        <label class="form-check-label"
+                               asp-for="Input.RememberMe">
+                            Remember me
+                        </label>
+
+                    </div>
+
+                    <button id="login-submit"
+                            type="submit"
+                            class="btn beauty-btn w-100 mb-3">
+
+                        Log In
+
+                    </button>
+
+                    <div class="auth-links text-center">
+
+                        <p>
+                            <a asp-page="./ForgotPassword">
+                                Forgot your password?
+                            </a>
+                        </p>
+
+                        <p>
+                            Don't have an account?
+                            <a asp-page="./Register"
+                               asp-route-returnUrl="@Model.ReturnUrl">
+                                Register here
+                            </a>
+                        </p>
+
+                        <p>
+                            <a asp-page="./ResendEmailConfirmation">
+                                Resend confirmation email
+                            </a>
+                        </p>
+
+                    </div>
+
+                </form>
+
+                @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                {
+                    <hr class="my-4" />
+
+                    <h5 class="text-center mb-3">
+                        Or continue with
+                    </h5>
+
+                    <form id="external-account"
+                          asp-page="./ExternalLogin"
+                          asp-route-returnUrl="@Model.ReturnUrl"
+                          method="post">
+
+                        <div class="d-grid gap-2">
+
+                            @foreach (var provider in Model.ExternalLogins!)
+                            {
+                                <button type="submit"
+                                        class="btn btn-outline-secondary rounded-pill"
+                                        name="provider"
+                                        value="@provider.Name">
+
+                                    Continue with @provider.DisplayName
+
+                                </button>
+                            }
+
+                        </div>
+
+                    </form>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+@* @page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
 <h1>@ViewData["Title"]</h1>
 <div class="row">
     <div class="col-md-4">
@@ -81,3 +242,4 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+ *@

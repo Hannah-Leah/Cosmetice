@@ -4,6 +4,190 @@
     ViewData["Title"] = "Register";
 }
 
+<div class="auth-page">
+
+    <div class="auth-card">
+
+      
+
+        <form id="registerForm"
+              asp-route-returnUrl="@Model.ReturnUrl"
+              method="post"
+              enctype="multipart/form-data"
+              class="auth-form">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
+
+            <div class="profile-upload">
+
+                <img id="previewImage"
+                     src="/images/default-user.png"
+                     class="profile-preview" />
+
+                <label class="form-label fw-bold">
+                    Profile Picture
+                </label>
+
+                <input asp-for="Input.ProfilePicture"
+                       type="file"
+                       class="form-control"
+                       id="profilePictureInput" />
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Input.DisplayName"></label>
+
+                    <input asp-for="Input.DisplayName"
+                           class="form-control"
+                           placeholder="Username" />
+
+                    <span asp-validation-for="Input.DisplayName"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Input.Country"></label>
+
+                    <input asp-for="Input.Country"
+                           class="form-control"
+                           placeholder="Country" />
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Input.SkinType"></label>
+
+                    <select asp-for="Input.SkinType"
+                            class="form-select">
+
+                        <option value="">Select skin type</option>
+
+                        <option>Dry</option>
+                        <option>Normal</option>
+                        <option>Combination</option>
+                        <option>Oily</option>
+                        <option>Sensitive</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Input.Age"></label>
+
+                    <input asp-for="Input.Age"
+                           class="form-control"
+                           placeholder="Age" />
+
+                </div>
+
+                <div class="col-12 mb-3">
+
+                    <label asp-for="Input.Email"></label>
+
+                    <input asp-for="Input.Email"
+                           class="form-control"
+                           placeholder="you@example.com" />
+
+                    <span asp-validation-for="Input.Email"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Input.Password"></label>
+
+                    <input asp-for="Input.Password"
+                           class="form-control"
+                           placeholder="Password" />
+
+                    <span asp-validation-for="Input.Password"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="Input.ConfirmPassword"></label>
+
+                    <input asp-for="Input.ConfirmPassword"
+                           class="form-control"
+                           placeholder="Confirm Password" />
+
+                    <span asp-validation-for="Input.ConfirmPassword"
+                          class="text-danger"></span>
+
+                </div>
+
+            </div>
+
+            <button id="registerSubmit"
+                    type="submit"
+                    class="btn beauty-btn w-100 py-3">
+
+                Create Account
+
+            </button>
+
+            <div class="auth-footer">
+
+                Already have an account?
+
+                <a asp-page="./Login">
+                    Log in
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document
+        .getElementById("profilePictureInput")
+        .addEventListener("change", function(e){
+
+            const file=e.target.files[0];
+
+            if(file){
+
+                document
+                .getElementById("previewImage")
+                .src=URL.createObjectURL(file);
+
+            }
+
+        });
+
+    </script>
+
+}
+
+@* @page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
 <h1>@ViewData["Title"]</h1>
 
 <div class="row">
@@ -86,9 +270,8 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h3>Use another service to register.</h3>
             <hr />
-            @{
+           @*  @{
                 if ((Model.ExternalLogins?.Count ?? 0) == 0)
                 {
                     <div>
@@ -111,11 +294,12 @@
                         </div>
                     </form>
                 }
-            }
-        </section>
+            } *@
+@*         </section>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
+} *@
+ 

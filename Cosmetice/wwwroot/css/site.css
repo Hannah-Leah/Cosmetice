@@ -484,6 +484,90 @@ body {
     display: none;
 }
 
+/* 
+   LOGIN & REGISTER */
+
+.auth-page {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg,#ffe4ef,#fff8fb);
+    padding: 50px 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 650px;
+    background: white;
+    border-radius: 30px;
+    padding: 45px;
+    box-shadow: 0 15px 40px rgba(214,51,132,.12);
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+    .auth-logo h1 {
+        color: #d63384;
+        font-weight: 700;
+        letter-spacing: 3px;
+        margin-bottom: 10px;
+    }
+
+    .auth-logo p {
+        color: #777;
+    }
+
+.auth-form .form-control,
+.auth-form .form-select {
+    border-radius: 16px;
+    padding: 14px;
+    border: 1px solid #f3d5e3;
+    box-shadow: none;
+}
+
+    .auth-form .form-control:focus,
+    .auth-form .form-select:focus {
+        border-color: #d63384;
+        box-shadow: 0 0 0 .2rem rgba(214,51,132,.15);
+    }
+
+.auth-form label {
+    font-weight: 600;
+    color: #666;
+}
+
+.profile-upload {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.profile-preview {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #ffe5ef;
+    margin-bottom: 15px;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 25px;
+}
+
+    .auth-footer a {
+        color: #d63384;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
 
 
 /* mobile */
