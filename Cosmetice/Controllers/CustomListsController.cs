@@ -111,18 +111,28 @@ namespace Cosmetice.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveProduct(
-            int customListItemId)
+        public async Task<IActionResult> RemoveProduct(int customListItemId)
         {
-            var item =
-                await _context.CustomListItems
-                    .FindAsync(customListItemId);
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (item != null)
-            {
-                _context.CustomListItems.Remove(item);
-                await _context.SaveChangesAsync();
-            }
+            var item = await _context.CustomListItems
+                .Include(i => i.CustomList)
+                .FirstOrDefaultAsync(i =>
+                    i.CustomListItemId == customListItemId);
+
+            if (item == null)
+                return NotFound();
+
+            // Only the owner of the list can remove products
+            if (item.CustomList.UserId != userId)
+                return Forbid();
+
+            _context.CustomListItems.Remove(item);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Product removed from the list.";
 
             return Redirect(Request.Headers["Referer"].ToString());
         }

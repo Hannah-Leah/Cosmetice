@@ -1,4 +1,13 @@
 ﻿@model Cosmetice.Models.CustomList
+@using System.Security.Claims
+
+@{
+    var currentUserId =
+        User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    bool isOwner =
+        currentUserId == Model.UserId;
+}
 
 @{
     ViewData["Title"] = Model.Name;
@@ -58,6 +67,41 @@
                             View Product
 
                         </a>
+
+                    @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-action="RemoveProduct"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="customListItemId"
+                                       value="@item.CustomListItemId" />
+
+                                @if (isOwner)
+                                {
+                                    <form asp-action="RemoveProduct"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="customListItemId"
+                                               value="@item.CustomListItemId" />
+
+                                        <button type="submit"
+                                                class="btn remove-list-btn w-100">
+
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+                                }
+
+                            </form>
+                        }
 
                     </div>
 

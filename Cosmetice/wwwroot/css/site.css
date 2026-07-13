@@ -569,6 +569,25 @@ body {
             text-decoration: underline;
         }
 
+/* Remove from Custom List */
+
+.remove-list-btn {
+    background: #fff0f6;
+    color: #d63384;
+    border: 2px solid #ffd3e6;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: .25s ease;
+}
+
+    .remove-list-btn:hover {
+        background: #d63384;
+        color: white;
+        border-color: #d63384;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(214,51,132,.25);
+    }
+
 
 /* mobile */
 
