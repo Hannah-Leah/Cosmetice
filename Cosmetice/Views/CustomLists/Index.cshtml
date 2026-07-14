@@ -93,7 +93,7 @@
             <div class="card-body">
 
                 <h5 class="card-title">
-                    📋 @list.Name
+                     @list.Name
                 </h5>
 
                 <p class="text-muted">
@@ -102,7 +102,7 @@
                                         : list.Description)
                 </p>
 
-                    <div class="mb-3">
+                   @*  <div class="mb-3">
 
                         <span class="badge bg-primary">
                             @list.CustomListItems.Count products
@@ -117,6 +117,27 @@
                         else
                         {
                             <span class="badge bg-secondary">
+                                Private
+                            </span>
+                        }
+
+                    </div> *@
+
+                    <div class="mb-3 d-flex gap-2 flex-wrap">
+
+                        <span class="beauty-badge">
+                             @list.CustomListItems.Count Products
+                        </span>
+
+                    @if (list.IsPublic == true)
+                        {
+                            <span class="beauty-badge-public">
+                                 Public
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="beauty-badge-private">
                                 Private
                             </span>
                         }
@@ -147,8 +168,10 @@
                                    value="@list.CustomListId" />
 
                             <button type="submit"
-                                    class="btn btn-outline-danger">
+                                    class="btn beauty-delete-btn">
+
                                 Delete
+
                             </button>
 
                         </form>
