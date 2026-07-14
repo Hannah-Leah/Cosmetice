@@ -1,173 +1,353 @@
 ﻿@model Cosmetice.Models.Product
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Product";
 }
 
-<h1>Edit</h1>
+<div class="container py-5">
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProductId" />
+    <div class="beauty-form-card">
 
-            <hr />
+        <div class="text-center mb-5">
 
-            <h4>Current Images</h4>
+            <h1 class="beauty-title">
+                Edit Product
+            </h1>
 
-            @if (Model.ProductImages.Any())
-            {
-                <div class="row mb-4">
+        </div>
 
-                    @foreach (var image in Model.ProductImages)
-                    {
-                        <div class="col-md-3">
+        <form asp-action="Edit"
+              enctype="multipart/form-data">
 
-                            <div class="card mb-3">
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
 
-                                <img src="@image.ImageUrl"
-                                     class="card-img-top"
-                                     style="height:200px;object-fit:cover;" />
+            <input type="hidden"
+                   asp-for="ProductId" />
 
-                                <div class="card-body text-center">
+            <input type="hidden"
+                   asp-for="AverageRating" />
 
-                                    <div class="form-check">
+            <input type="hidden"
+                   asp-for="ReviewCount" />
 
-                                        <input class="form-check-input"
-                                               type="checkbox"
-                                               name="imagesToDelete"
-                                               value="@image.ProductImageId" />
+            <input type="hidden"
+                   asp-for="CreatedAt" />
 
-                                        <label class="form-check-label">
-                                            Delete
-                                        </label>
+            <!-- CURRENT IMAGES -->
+
+            <div class="beauty-section">
+
+                <h4 class="beauty-section-title">
+                     Current Images
+                </h4>
+
+                @if (Model.ProductImages.Any())
+                {
+                    <div class="row">
+
+                        @foreach (var image in Model.ProductImages)
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+
+                                <div class="beauty-image-card">
+
+                                    <img src="@image.ImageUrl"
+                                         class="beauty-edit-image" />
+
+                                    <div class="beauty-image-footer">
+
+                                        <div class="form-check">
+
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   name="imagesToDelete"
+                                                   value="@image.ProductImageId"
+                                                   id="img-@image.ProductImageId" />
+
+                                            <label class="form-check-label text-danger"
+                                                   for="img-@image.ProductImageId">
+
+                                                Remove image
+
+                                            </label>
+
+                                        </div>
 
                                     </div>
 
                                 </div>
 
                             </div>
+                        }
 
-                        </div>
-                    }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+
+                        No product images uploaded yet.
+
+                    </div>
+                }
+
+            </div>
+
+            <!-- ADD NEW IMAGES -->
+
+            <div class="beauty-section mt-4">
+
+                <h4 class="beauty-section-title">
+
+                     Upload New Images
+
+                </h4>
+
+                <div class="beauty-upload-box">
+
+                    <input type="file"
+                           name="imageFiles"
+                           multiple
+                           accept="image/*"
+                           class="form-control" />
+
+                    <small class="text-muted">
+
+                        Select one or more new images.
+
+                    </small>
 
                 </div>
-            }
-            else
-            {
-                <p class="text-muted">
-                    No images uploaded.
-                </p>
-            }
-
-            <div class="mb-4">
-
-                <label class="form-label">
-                    Add New Images
-                </label>
-
-                <input type="file"
-                       name="imageFiles"
-                       multiple
-                       accept="image/*"
-                       class="form-control" />
 
             </div>
 
-            <div class="form-group">
-                <label asp-for="BrandId" class="control-label"></label>
-                <select asp-for="BrandId" class="form-control" asp-items="ViewBag.BrandId"></select>
-                <span asp-validation-for="BrandId" class="text-danger"></span>
+            <!-- PRODUCT INFORMATION -->
+
+            <div class="beauty-section mt-4">
+
+                <h4 class="beauty-section-title">
+
+                     Product Information
+
+                </h4>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-4">
+
+                        <label class="beauty-label">
+
+                            Brand
+
+                        </label>
+
+                        <select asp-for="BrandId"
+                                asp-items="ViewBag.BrandId"
+                                class="form-select beauty-input">
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+
+                        <label class="beauty-label">
+
+                            Category
+
+                        </label>
+
+                        <select asp-for="CategoryId"
+                                asp-items="ViewBag.CategoryId"
+                                class="form-select beauty-input">
+                        </select>
+
+                    </div>
+
+                    <div class="col-12 mb-4">
+
+                        <label class="beauty-label">
+
+                            Product Name
+
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-12 mb-4">
+
+                        <label class="beauty-label">
+
+                            Description
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  rows="5"
+                                  class="form-control beauty-input">
+                        </textarea>
+
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+
+                        <label class="beauty-label">
+
+                            Release Date
+
+                        </label>
+
+                        <input asp-for="ReleaseDate"
+                               type="date"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+
+                        <label class="beauty-label">
+
+                            Country
+
+                        </label>
+
+                        <input asp-for="CountryOfOrigin"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+
+                        <label class="beauty-label">
+
+                            Price
+
+                        </label>
+
+                        <input asp-for="Price"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+
+                        <label class="beauty-label">
+
+                            Skin Type
+
+                        </label>
+
+                        <input asp-for="SkinType"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+
+                        <label class="beauty-label">
+
+                            Shade
+
+                        </label>
+
+                        <input asp-for="Shade"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+
+                        <label class="beauty-label">
+
+                            Finish Type
+
+                        </label>
+
+                        <input asp-for="FinishType"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+
+                        <label class="beauty-label">
+
+                            Volume
+
+                        </label>
+
+                        <input asp-for="Volume"
+                               class="form-control beauty-input" />
+
+                    </div>
+
+                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                        <div class="form-check form-switch mt-4">
+
+                            <input asp-for="IsVegan"
+                                   class="form-check-input beauty-switch" />
+
+                            <label class="form-check-label ms-2">
+
+                                 Vegan Product
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label class="beauty-label">
+
+                            Ingredients
+
+                        </label>
+
+                        <textarea asp-for="Ingredients"
+                                  rows="6"
+                                  class="form-control beauty-input">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
+
+            <div class="text-center mt-5">
+
+                <button type="submit"
+                        class="btn beauty-btn px-5">
+
+                     Save Changes
+
+                </button>
+
+                <a asp-action="Index"
+                   class="btn beauty-btn-secondary ms-2">
+
+                    Cancel
+
+                </a>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
-                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CountryOfOrigin" class="control-label"></label>
-                <input asp-for="CountryOfOrigin" class="form-control" />
-                <span asp-validation-for="CountryOfOrigin" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SkinType" class="control-label"></label>
-                <input asp-for="SkinType" class="form-control" />
-                <span asp-validation-for="SkinType" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsVegan" /> @Html.DisplayNameFor(model => model.IsVegan)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Shade" class="control-label"></label>
-                <input asp-for="Shade" class="form-control" />
-                <span asp-validation-for="Shade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ingredients" class="control-label"></label>
-                <input asp-for="Ingredients" class="form-control" />
-                <span asp-validation-for="Ingredients" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Volume" class="control-label"></label>
-                <input asp-for="Volume" class="form-control" />
-                <span asp-validation-for="Volume" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FinishType" class="control-label"></label>
-                <input asp-for="FinishType" class="form-control" />
-                <span asp-validation-for="FinishType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-               @*  <label asp-for="AverageRating" class="control-label"></label> *@
-                <input type="hidden" asp-for="AverageRating" class="form-control" />
-                <span asp-validation-for="AverageRating" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-              @*   <label asp-for="ReviewCount" class="control-label"></label> *@
-                <input type="hidden" asp-for="ReviewCount" class="form-control" />
-                <span asp-validation-for="ReviewCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+
         </form>
+
     </div>
+
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

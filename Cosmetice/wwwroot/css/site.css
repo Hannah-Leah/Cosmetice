@@ -788,6 +788,161 @@ body {
     font-weight: 600;
 }
 
+/* Admin search */
+
+.Admin-search {
+    border-radius: 30px;
+    min-width: 280px;
+    border: 1px solid #ffd4e7;
+    padding: 10px 18px;
+}
+
+    .Admin-search:focus {
+        border-color: #d63384;
+        box-shadow: 0 0 0 .2rem rgba(214,51,132,.15);
+    }
+
+/* Pagination */
+
+.pagination {
+    gap: 8px;
+}
+
+.page-item .page-link {
+    border: none;
+    border-radius: 50px;
+    color: #d63384;
+    background: #fff3f8;
+    padding: 10px 16px;
+    transition: .2s;
+}
+
+    .page-item .page-link:hover {
+        background: #ffd7e8;
+        color: #c02673;
+    }
+
+.page-item.active .page-link {
+    background: #d63384;
+    color: white;
+}
+
+/* Better admin table */
+
+.table tbody tr {
+    transition: .2s;
+}
+
+    .table tbody tr:hover {
+        background: #fff9fc;
+    }
+
+/* 
+    CREATE / EDIT PRODUCTS
+
+*/
+
+.beauty-form-card {
+    background: white;
+    border-radius: 28px;
+    padding: 45px;
+    box-shadow: 0 10px 35px rgba(214,51,132,.08);
+}
+
+.beauty-section {
+   
+    border-radius: 22px;
+    padding: 30px;
+    margin-bottom: 25px;
+}
+
+.beauty-section-title {
+    color: #d63384;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.beauty-label {
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.beauty-input {
+    border-radius: 14px;
+    border: 1px solid #f3c6da;
+    padding: 12px;
+}
+
+    .beauty-input:focus {
+        border-color: #d63384;
+        box-shadow: 0 0 0 .2rem rgba(214,51,132,.15);
+    }
+
+.beauty-upload-box {
+    border: 2px solid #f3b4cf;
+    border-radius: 18px;
+    background: white;
+    padding: 35px;
+    text-align: center;
+}
+
+.beauty-switch:checked {
+    background-color: #d63384;
+    border-color: #d63384;
+}
+
+.beauty-btn-secondary {
+    background: #ffe6f1;
+    color: #d63384;
+    border-radius: 50px;
+    padding: 10px 26px;
+    border: none;
+    transition: .25s;
+}
+
+    .beauty-btn-secondary:hover {
+        background: #ffd2e8;
+        color: #b3266d;
+    }
+
+/* EDIT PRODUCT */
+
+.beauty-image-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 5px 18px rgba(214,51,132,.08);
+    transition: .25s;
+}
+
+    .beauty-image-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(214,51,132,.18);
+    }
+
+.beauty-edit-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.beauty-image-footer {
+    padding: 14px;
+    text-align: center;
+    background: #fff8fb;
+}
+
+    .beauty-image-footer .form-check-input {
+        border-color: #d63384;
+    }
+
+        .beauty-image-footer .form-check-input:checked {
+            background-color: #d63384;
+            border-color: #d63384;
+        }
+
 
 /* mobile */
 

@@ -7,7 +7,7 @@
     <div class="col-md-4">
         <div class="beauty-stat-card">
             <div class="card-body">
-                <h3>@Model.Count</h3>
+                <h3>@ViewBag.TotalUsers</h3>
                 <p>Total Users</p>
             </div>
         </div>
@@ -16,10 +16,7 @@
     <div class="col-md-4">
         <div class="beauty-stat-card">
             <div class="card-body">
-                <h3>
-                    @(Model.Count(u =>
-                                        UserManager.IsInRoleAsync(u, "Admin").Result))
-                </h3>
+                <h3>@ViewBag.TotalAdmins</h3>
                 <p>Admins</p>
             </div>
         </div>
@@ -29,11 +26,31 @@
 
 <div class="container">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
 
-        <h2>
-             User Management
+        <h2 class="beauty-title">
+            User Management
         </h2>
+
+        <form asp-action="Index"
+              method="get"
+              class="d-flex">
+
+            <input type="text"
+                   name="search"
+                   value="@ViewBag.Search"
+                   class="form-control Admin-search me-2"
+                   placeholder="Search users..." />
+
+            <button class="beauty-btn">
+
+                Search
+
+            </button>
+
+        </form>
+
+    </div>
 
        
 
@@ -171,8 +188,34 @@
 
             </table>
 
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav class="mt-4">
+
+                <ul class="pagination justify-content-center">
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-search="@ViewBag.Search">
+
+                                @i
+
+                            </a>
+
+                        </li>
+                    }
+
+                </ul>
+
+            </nav>
+        }
+
         </div>
 
     </div>
 
-</div>

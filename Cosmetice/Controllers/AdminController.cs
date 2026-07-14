@@ -24,9 +24,42 @@ namespace Cosmetice.Controllers
 
         // show users 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(
+     string search,
+     int page = 1)
         {
-            var users = _userManager.Users.ToList();
+            const int pageSize = 10;
+
+            var query = _userManager.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+
+                query = query.Where(u =>
+                    u.UserName.Contains(search) ||
+                    u.DisplayName.Contains(search) ||
+                    u.Email.Contains(search));
+            }
+
+            int totalUsers = await query.CountAsync();
+
+            var users = await query
+                .OrderBy(u => u.UserName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.Search = search;
+            ViewBag.Page = page;
+            ViewBag.TotalPages =
+                (int)Math.Ceiling(totalUsers / (double)pageSize);
+
+            ViewBag.TotalUsers = await _userManager.Users.CountAsync();
+
+            ViewBag.TotalAdmins =
+                (await _userManager.GetUsersInRoleAsync("Admin")).Count;
+
             return View(users);
         }
 
