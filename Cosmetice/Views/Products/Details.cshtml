@@ -81,7 +81,7 @@
 
                 
                 <span class="beauty-brand">
-                    ✨ @product.Brand?.Name
+                    𓊆 @product.Brand?.Name  𓊇
                 </span>
 
                 <h1 class="beauty-product-title">
@@ -113,7 +113,7 @@
                     @if (product.IsVegan)
                     {
                         <span class="badge bg-success">
-                            🌱 Vegan
+                             Vegan
                         </span>
                     }
 
@@ -185,7 +185,7 @@
                         <div class="card mt-4 shadow-sm">
                             <div class="card-body">
 
-                                <h5>📋 Add To Custom List</h5>
+                                <h5> Add To Custom List</h5>
 
                                 <form asp-controller="CustomLists"
                                       asp-action="AddProduct"
@@ -227,7 +227,7 @@
                 {
                     <div class="review-form-card mt-5">
 
-                        <h3>💖 Write a Review</h3>
+                        <h3> Write a Review</h3>
 
                         <form asp-controller="Reviews"
                               asp-action="AddReview"
@@ -316,7 +316,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
 
                     <h3 class="mb-0">
-                        💕 Community Reviews
+                        『Community Reviews』
                     </h3>
 
                     <form method="get"
@@ -472,7 +472,7 @@
                                         <div class="vote-buttons">
 
                                             <button type="button"
-                                                    class="btn btn-sm btn-outline-success vote-btn"
+                                                    class="vote-btn" 
                                                     data-review-id="@review.ReviewId"
                                                     data-is-like="true">
 
@@ -483,7 +483,7 @@
                                             </button>
 
                                             <button type="button"
-                                                    class="btn btn-sm btn-outline-danger vote-btn"
+                                                    class="vote-btn"
                                                     data-review-id="@review.ReviewId"
                                                     data-is-like="false">
 
@@ -497,37 +497,54 @@
                                     }
 
                                    <!-- Review Replies-->
-
                                     @if (User.Identity.IsAuthenticated)
                                     {
                                         <div class="mt-3">
 
-                                            <form asp-controller="Reviews"
-                                                  asp-action="AddReply"
-                                                  method="post">
+                                            <button class="reply-action"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#reviewReply-@review.ReviewId">
 
-                                                @Html.AntiForgeryToken()
+                                                 Reply 
 
-                                                <input type="hidden"
-                                                       name="reviewId"
-                                                       value="@review.ReviewId" />
+                                            </button>
 
-                                                <input type="hidden"
-                                                       name="productId"
-                                                       value="@product.ProductId" />
+                                            <div class="collapse mt-3"
+                                                 id="reviewReply-@review.ReviewId">
 
-                                                <textarea name="content"
-                                              class="form-control"
-                                              rows="2"
-                                              placeholder="Write a reply...">
-            </textarea>
+                                                <div class="reply-box">
 
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-primary mt-2">
-                                                    Reply
-                                                </button>
+                                                    <form asp-controller="Reviews"
+                                                          asp-action="AddReply"
+                                                          method="post">
 
-                                            </form>
+                                                        @Html.AntiForgeryToken()
+
+                                                        <input type="hidden"
+                                                               name="reviewId"
+                                                               value="@review.ReviewId" />
+
+                                                        <input type="hidden"
+                                                               name="productId"
+                                                               value="@product.ProductId" />
+
+                                                        <textarea name="content"
+                                                      class="form-control"
+                                                      rows="3"
+                                                      placeholder="Share your thoughts..."></textarea>
+
+                                                        <button class="beauty-btn mt-3">
+
+                                                            Post Reply
+
+                                                        </button>
+
+                                                    </form>
+
+                                                </div>
+
+                                            </div>
 
                                         </div>
                                     }
@@ -558,20 +575,24 @@
 
                                 @if (currentUserId == review.UserId || User.IsInRole("Admin") )
                                 {
-                                    <div class="mt-2">
+                                    <div class="review-actions">
 
                                         <a asp-controller="Reviews"
                                            asp-action="Edit"
                                            asp-route-id="@review.ReviewId"
-                                           class="btn btn-sm btn-outline-primary">
+                                           class="review-btn review-btn-edit">
+
                                             Edit
+
                                         </a>
 
                                         <a asp-controller="Reviews"
                                            asp-action="Delete"
                                            asp-route-id="@review.ReviewId"
-                                           class="btn btn-sm btn-outline-danger">
+                                           class="review-btn review-btn-delete">
+
                                             Delete
+
                                         </a>
 
                                     </div>
@@ -591,7 +612,7 @@
                     else
                     {
                         <div class="empty-reviews">
-                           Be the first to review this product 💖
+                           Be the first to review this product!
                         </div>
                     }
                     

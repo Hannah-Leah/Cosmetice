@@ -42,7 +42,10 @@ namespace Cosmetice.Controllers
             {
                 TempData["Error"] = "You have already reviewed this product.";
 
-                return RedirectToAction(nameof(Details), new { id = model.ProductId });
+                return RedirectToAction(
+    "Details",
+    "Products",
+    new { id = model.ProductId });
             }
 
             var review = new Review
