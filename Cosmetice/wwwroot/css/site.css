@@ -746,6 +746,48 @@ body {
             box-shadow: 0 0 0 .15rem rgba(214,51,132,.15);
         }
 
+        /*
+            Admin page
+        */
+.beauty-stat-card {
+    border: none;
+    border-radius: 22px;
+    background: white;
+    box-shadow: 0 6px 18px rgba(214,51,132,.08);
+    transition: .25s;
+}
+
+    .beauty-stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .beauty-stat-card h3 {
+        color: #d63384;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .beauty-stat-card p {
+        color: #777;
+        margin: 0;
+    }
+
+.role-admin {
+    background: #ffe2ef;
+    color: #d63384;
+    padding: 7px 14px;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.role-user {
+    background: #fff5f9;
+    color: #777;
+    padding: 7px 14px;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
 
 /* mobile */
 

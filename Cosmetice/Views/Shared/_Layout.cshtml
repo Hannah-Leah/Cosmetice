@@ -43,6 +43,8 @@
             </div>
         </nav> *@
 
+      
+
         <nav class="navbar navbar-expand-lg beauty-navbar">
             <div class="container">
 
@@ -133,6 +135,20 @@
             </div>
         </nav>
 
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["Error"]
+            </div>
+        }
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -148,6 +164,28 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+         document.addEventListener("DOMContentLoaded", function () {
+
+            const alerts = document.querySelectorAll(".alert");
+
+            alerts.forEach(alert => {
+
+                setTimeout(() => {
+
+                    alert.style.transition = "opacity .4s";
+                    alert.style.opacity = "0";
+
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 400);
+
+                }, 3500);
+
+            });
+
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

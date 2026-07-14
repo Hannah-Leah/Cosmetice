@@ -73,6 +73,8 @@ namespace Cosmetice.Controllers
             //    .ThenInclude(r => r.ReviewImages)
 
             //    .FirstOrDefaultAsync(m => m.ProductId == id);
+
+
             var product = await _context.Products
 .Include(p => p.Brand)
 .Include(p => p.Category)
@@ -437,5 +439,7 @@ namespace Cosmetice.Controllers
         {
             return _context.Products.Any(e => e.ProductId == id);
         }
+
+
     }
 }

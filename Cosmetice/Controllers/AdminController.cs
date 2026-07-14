@@ -167,6 +167,17 @@ namespace Cosmetice.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Prevent an admin from demoting themselves
+            if (user.Id == currentUserId)
+            {
+                TempData["Error"] =
+                    "You cannot change your own administrator role.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             bool isAdmin =
                 await _userManager.IsInRoleAsync(user, "Admin");
 

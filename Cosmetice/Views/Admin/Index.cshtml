@@ -5,7 +5,7 @@
 <div class="row mb-4">
 
     <div class="col-md-4">
-        <div class="card text-center shadow-sm">
+        <div class="beauty-stat-card">
             <div class="card-body">
                 <h3>@Model.Count</h3>
                 <p>Total Users</p>
@@ -14,7 +14,7 @@
     </div>
 
     <div class="col-md-4">
-        <div class="card text-center shadow-sm">
+        <div class="beauty-stat-card">
             <div class="card-body">
                 <h3>
                     @(Model.Count(u =>
@@ -35,9 +35,7 @@
              User Management
         </h2>
 
-        <span class="badge bg-dark fs-6">
-            @Model.Count Users
-        </span>
+       
 
     </div>
 
@@ -99,14 +97,18 @@
 
                                 @if (isAdmin)
                                 {
-                                    <span class="badge bg-danger">
-                                        Admin
+                                    <span class="role-admin">
+
+                                         Admin
+
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">
-                                        User
+                                    <span class="role-user">
+
+                                         User
+
                                     </span>
                                 }
 
@@ -118,7 +120,7 @@
 
                                     <a asp-action="Details"
                                        asp-route-id="@user.Id"
-                                       class="btn btn-outline-info btn-sm">
+                                       class="review-btn review-btn-edit">
 
                                         Details
 
@@ -152,7 +154,7 @@
 
                                         @Html.AntiForgeryToken()
 
-                                        <button class="btn btn-danger btn-sm">
+                                        <button class="review-btn review-btn-delete">
                                             Delete
                                         </button>
 
