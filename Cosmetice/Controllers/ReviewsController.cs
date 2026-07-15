@@ -25,6 +25,9 @@ namespace Cosmetice.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData["Error"] =
+                    "Please complete all required fields before submitting your review.";
+
                 return RedirectToAction(
                     "Details",
                     "Products",
