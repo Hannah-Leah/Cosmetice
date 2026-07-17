@@ -970,7 +970,7 @@ body {
 
 /* mobile */
 
-@media(max-width:768px) {
+/*@media(max-width:768px) {
 
     .reply-children {
         margin-left: 14px;
@@ -980,6 +980,301 @@ body {
         width: 36px;
         height: 36px;
     }
+}*/
+
+/* 
+   RESPONSIVE DESIGN
+   */
+
+/* Tablets */
+@media (max-width:991px) {
+
+    .hero-section {
+        padding: 50px 25px;
+    }
+
+        .hero-section h1 {
+            font-size: 2.3rem;
+        }
+
+    .beauty-form-card {
+        padding: 30px;
+    }
+
+    .product-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .beauty-product-image {
+        height: 260px;
+    }
+
+    .review-images-grid {
+        justify-content: center;
+    }
+
+    .admin-buttons {
+        flex-wrap: wrap;
+    }
 }
 
 
+/* Phones */
+
+@media (max-width:768px) {
+
+    body {
+        font-size: 15px;
+    }
+
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* ---------------- NAVBAR ---------------- */
+
+    .beauty-logo {
+        font-size: 1.4rem;
+    }
+
+    .navbar-nav {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+        .navbar-nav .nav-item {
+            margin: 6px 0;
+        }
+
+    .navbar-collapse {
+        background: white;
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,.08);
+        margin-top: 15px;
+    }
+
+    /* ---------------- HERO ---------------- */
+
+    .hero-section {
+        padding: 35px 20px;
+        border-radius: 20px;
+    }
+
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+
+        .hero-section p {
+            font-size: 1rem;
+        }
+
+    .search-input {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* ---------------- PRODUCT CARDS ---------------- */
+
+    .beauty-product-image,
+    .beauty-image {
+        height: 220px;
+    }
+
+    .beauty-card-body {
+        padding: 18px;
+    }
+
+    /* ---------------- PRODUCT DETAILS ---------------- */
+
+    .product-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ingredients-box {
+        padding: 18px;
+    }
+
+    /* ---------------- REVIEWS ---------------- */
+
+    .review-card {
+        padding: 18px;
+    }
+
+    .review-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .review-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .review-btn {
+        width: 100%;
+    }
+
+    .vote-buttons {
+        flex-wrap: wrap;
+    }
+
+    .vote-btn {
+        flex: 1;
+    }
+
+    .review-image-grid {
+        width: 100%;
+        height: 220px;
+    }
+
+    /* ---------------- REPLIES ---------------- */
+
+    .reply-children {
+        margin-left: 10px;
+        padding-left: 10px;
+    }
+
+    .reply-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .reply-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    /* ---------------- FORMS ---------------- */
+
+    .beauty-form-card {
+        padding: 22px;
+    }
+
+    .beauty-section {
+        padding: 20px;
+    }
+
+    .beauty-upload-box {
+        padding: 20px;
+    }
+
+    .beauty-btn,
+    .beauty-btn-secondary {
+        width: 100%;
+    }
+
+    /* ---------------- PROFILE ---------------- */
+
+    .beauty-profile-nav {
+        margin-bottom: 20px;
+    }
+
+        .beauty-profile-nav .nav-link {
+            text-align: center;
+        }
+
+    /* ---------------- ADMIN TABLE ---------------- */
+
+    .table-responsive {
+        border: none;
+    }
+
+    table {
+        min-width: 700px;
+    }
+
+    /* ---------------- ADMIN SEARCH ---------------- */
+
+    .Admin-search {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    /* ---------------- PAGINATION ---------------- */
+
+    .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .page-link {
+        padding: 8px 14px;
+    }
+}
+
+
+/* Very small phones */
+
+@media (max-width:576px) {
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.3rem;
+    }
+
+    .beauty-logo {
+        font-size: 1.2rem;
+    }
+
+    .hero-section h1 {
+        font-size: 1.7rem;
+    }
+
+    .beauty-card,
+    .beauty-product-card {
+        border-radius: 18px;
+    }
+
+    .beauty-product-image,
+    .beauty-image {
+        height: 190px;
+    }
+
+    .review-image-grid {
+        height: 180px;
+    }
+
+    .profile-preview {
+        width: 110px;
+        height: 110px;
+    }
+
+    /* Mobile navbar button */
+
+    .beauty-toggler {
+        border: none;
+        background: #fff0f7;
+        color: #d63384;
+        border-radius: 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: .25s;
+        box-shadow: 0 4px 15px rgba(214,51,132,.12);
+    }
+
+        .beauty-toggler:hover {
+            background: #ffd9ea;
+            transform: scale(1.05);
+        }
+
+        .beauty-toggler:focus {
+            box-shadow: 0 0 0 .2rem rgba(214,51,132,.2);
+        }
+
+
+}
